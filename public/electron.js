@@ -10,6 +10,7 @@ function createWindow() {
         gtitle: "GenAI MongoDB App",
         width: 1500,
         height: 1000,
+        // transparent: true,
         webPreferences: {
             nodeIntegration: true,
             enableRemoteModule: true,
@@ -22,5 +23,5 @@ function createWindow() {
     // Open the DevTools.
     win.webContents.openDevTools()
 }
-
+app.disableHardwareAcceleration();
 app.on('ready', createWindow)
