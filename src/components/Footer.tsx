@@ -19,12 +19,12 @@ const FooterBox = styled(Box)(({ theme }) => ({
 const Footer: React.FC = () => {
     return (
         <FooterBox>
-            <Typography variant="body1" style={{ paddingBottom: '10px' }}>Tool built by</Typography>
+            <Typography variant="body2" style={{ paddingBottom: '10px' }}>Tool built by</Typography>
             <img src={PeerislandsLogo} alt="peerislands_logo" style={{ width: '5%', paddingBottom: '10px' }} />
-            <Typography variant="body1" style={{ paddingBottom: '10px' }}>Powered by</Typography>
+            <Typography variant="body2" style={{ paddingBottom: '10px' }}>Powered by</Typography>
             <Typography variant="h6" style={{ paddingBottom: '10px' }}>
-                <img src={GoogleLogo} alt="peerislands_logo" style={{ width: '5%', paddingBottom: '10px', paddingRight: '20px' }} />
-                <img src={MongoDBLogo} alt="peerislands_logo" style={{ width: '7%', paddingBottom: '10px' }} />
+                <img src={GoogleLogo} alt="google_logo" style={{ width: '5%', paddingBottom: '10px', paddingRight: '20px' }} />
+                <img src={MongoDBLogo} alt="mongodb_logo" style={{ width: '7%', paddingBottom: '10px' }} />
             </Typography>
         </FooterBox>
     );

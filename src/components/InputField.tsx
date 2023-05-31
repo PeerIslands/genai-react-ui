@@ -50,6 +50,7 @@ const InputField: React.FC = () => {
                 {
                     headers: {
                         'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*',
                     }
                 }
             );
@@ -96,7 +97,7 @@ const InputField: React.FC = () => {
                 alignItems: 'center',
                 gap: '20px',
                 padding: '10px',
-                paddingTop: '200px',
+                paddingTop: '150px',
                 height: '80vh',
                 '& > :not(style)': { width: '70vw' }
             }}
