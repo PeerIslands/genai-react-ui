@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Drawer, IconButton, Box } from '@mui/material';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -8,12 +8,16 @@ import Avatar from '@mui/material/Avatar';
 import KeyIcon from '@mui/icons-material/Key';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import SettingsIcon from '@mui/icons-material/Settings';
+import { QueryContext } from './QueryContext';
+import { InputContext } from './InputContext';
 
 // Import the image for the avatar
 import ProfilePic from '../images/avatar.png';
 
 const NavigationDrawer: React.FC = () => {
     const [drawerOpen, setDrawerOpen] = useState(false);
+    const { history } = useContext(QueryContext);
+    const { setInput } = useContext(InputContext);
 
     const toggleDrawer = (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
         setDrawerOpen(open);
@@ -27,30 +31,11 @@ const NavigationDrawer: React.FC = () => {
             onKeyDown={toggleDrawer(false)}
         >
             <List>
-                <ListItem>
-                    <ListItemAvatar>
-                        <Avatar>
-                            <AccountCircleIcon />
-                        </Avatar>
-                    </ListItemAvatar>
-                    <ListItemText primary="Profile" secondary="Aneesh Prabu" />
-                </ListItem>
-                <ListItem>
-                    <ListItemAvatar>
-                        <Avatar>
-                            <KeyIcon />
-                        </Avatar>
-                    </ListItemAvatar>
-                    <ListItemText primary="API Keys" secondary="Google, MongoDB" />
-                </ListItem>
-                <ListItem>
-                    <ListItemAvatar>
-                        <Avatar>
-                            <SettingsIcon />
-                        </Avatar>
-                    </ListItemAvatar>
-                    <ListItemText primary="Settings" secondary="Mode: Light" />
-                </ListItem>
+                {history.map((query, index) => (
+                    <ListItem button key={index} onClick={() => setInput(query)}>
+                        <ListItemText primary={query} />
+                    </ListItem>
+                ))}
             </List>
         </Box>
     );

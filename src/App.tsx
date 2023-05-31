@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './App.css';
-import MongoLogin from './components/MongoLogin';
 import { palette } from '@leafygreen-ui/palette';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import InputField from './components/InputField';
+import { InputContext } from './components/InputContext';
 import NavigationDrawer from './components/NavigationDrawer';
 import Rive from '@rive-app/react-canvas';
+import { QueryContext } from './components/QueryContext';
 
 const theme = createTheme({
   palette: {
@@ -23,6 +24,14 @@ const Shapes = () => (
 );
 
 function App() {
+
+  const [input, setInput] = useState('');
+  const [history, setHistory] = useState<string[]>([]);
+
+  const addQuery = (query: string) => {
+    setHistory(prevHistory => [...prevHistory, query]);
+  };
+
   return (
     <div className="App">
       {/* <Shapes /> */}
@@ -32,10 +41,12 @@ function App() {
           href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
         />
         <ThemeProvider theme={theme}>
-          <NavigationDrawer />
-          {/* <MongoLogin /> */}
-          <InputField />
-          {/* <Footer /> */}
+          <QueryContext.Provider value={{ history, addQuery }}>
+            <InputContext.Provider value={{ input, setInput }}>
+              <InputField />
+              <NavigationDrawer />
+            </InputContext.Provider>
+          </QueryContext.Provider>
         </ThemeProvider>
       </header>
     </div >

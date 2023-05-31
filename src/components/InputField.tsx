@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Box, TextField, FormControl, InputLabel, Select, MenuItem, Button, ToggleButtonGroup, ToggleButton, Divider, Typography, CircularProgress } from '@mui/material';
 import axios from 'axios';
 import { styled } from '@mui/system';
 import PeerislandsLogo from '../images/peerislands.png';
 import GoogleLogo from '../images/google.png';
 import MongoDBLogo from '../images/mongodb.png';
+import { QueryContext } from './QueryContext';
+import { InputContext } from './InputContext';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     padding: theme.spacing(2),
@@ -31,7 +33,6 @@ const StyledCircularProgress = styled(CircularProgress)(({ theme }) => ({
 }));
 
 const InputField: React.FC = () => {
-    const [input, setInput] = useState("");
     const [examples, setExamples] = useState("");
     const [test, setTest] = useState("");
     const [response, setResponse] = useState("");
@@ -40,6 +41,8 @@ const InputField: React.FC = () => {
     const [model, setModel] = useState("code-bison");
     const [loading, setLoading] = useState(false);
     const [inputMode, setInputMode] = useState('freeform');
+    const { addQuery } = useContext(QueryContext);
+    const { input, setInput } = useContext(InputContext);
 
     // Handle input mode change
     const handleModeChange = (event: React.MouseEvent<HTMLElement>, mode: string) => {
@@ -48,6 +51,7 @@ const InputField: React.FC = () => {
     const handleButtonClick = async () => {
         setLoading(true);
         setResponse("");
+        addQuery(input);
 
         try {
             const response = await axios.post('http://localhost:8080/api/v1/predict',
