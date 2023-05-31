@@ -6,7 +6,6 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import InputField from './components/InputField';
 import NavigationDrawer from './components/NavigationDrawer';
 import Rive from '@rive-app/react-canvas';
-import Footer from './components/Footer';
 
 const theme = createTheme({
   palette: {
@@ -34,7 +33,7 @@ function App() {
         />
         <ThemeProvider theme={theme}>
           <NavigationDrawer />
-          <MongoLogin />
+          {/* <MongoLogin /> */}
           <InputField />
           {/* <Footer /> */}
         </ThemeProvider>

@@ -2,13 +2,32 @@ import React, { useState } from "react";
 import { Box, TextField, FormControl, InputLabel, Select, MenuItem, Button, ToggleButtonGroup, ToggleButton, Divider, Typography, CircularProgress } from '@mui/material';
 import axios from 'axios';
 import { styled } from '@mui/system';
-import Footer from "./Footer";
+import PeerislandsLogo from '../images/peerislands.png';
+import GoogleLogo from '../images/google.png';
+import MongoDBLogo from '../images/mongodb.png';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     padding: theme.spacing(2),
     border: `1px solid ${theme.palette.divider}`,
     borderRadius: theme.shape.borderRadius,
     backgroundColor: theme.palette.background.paper,
+}));
+
+const ResultBox = styled(Box)(({ theme }) => ({
+    position: 'relative',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    minHeight: '150px',
+    paddingTop: theme.spacing(7),
+}));
+
+const StyledTextField = styled(TextField)(({ theme }) => ({
+    width: '100%',
+}));
+
+const StyledCircularProgress = styled(CircularProgress)(({ theme }) => ({
+    position: 'absolute',
 }));
 
 const InputField: React.FC = () => {
@@ -28,6 +47,7 @@ const InputField: React.FC = () => {
     };
     const handleButtonClick = async () => {
         setLoading(true);
+        setResponse("");
 
         try {
             const response = await axios.post('http://localhost:8080/api/v1/predict',
@@ -51,11 +71,9 @@ const InputField: React.FC = () => {
                 }
             );
 
-            const responseData = response.data;
-
-            console.log(responseData);
-            if (responseData && responseData.data) {
-                setResponse(responseData.data);
+            console.log(response);
+            if (response) {
+                setResponse(response.data);
             }
         } catch (error) {
             console.error('Error making request:', error);
@@ -188,7 +206,7 @@ const InputField: React.FC = () => {
                     )}
 
                     {loading ? (
-                        <CircularProgress />
+                        <Button disabled variant="contained" onClick={handleButtonClick} sx={{ marginTop: '20px' }} >Ask</Button>
                     ) : (
                         <Button variant="contained" onClick={handleButtonClick} sx={{ marginTop: '20px' }} >Ask</Button>
                     )}
@@ -238,18 +256,34 @@ const InputField: React.FC = () => {
 
                 </StyledBox>
             </Box>
-            <TextField
-                value={response}
-                InputProps={{
-                    readOnly: true,
+            <ResultBox>
+                <StyledTextField
+                    value={response}
+                    InputProps={{
+                        readOnly: true,
+                    }}
+                    placeholder="Returned result will be displayed here"
+                    multiline
+                    rows={10}
+                    variant="outlined"
+                />
+                {loading && <StyledCircularProgress />}
+            </ResultBox>
+            {/* <Footer /> */}
+            <Box
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'center',
                 }}
-                placeholder="Returned result will be displayed here"
-                multiline
-                rows={4}
-                variant="outlined"
-                fullWidth
-            />
-            <Footer />
+            >
+                <Typography variant="body2" style={{ paddingRight: '10px' }}>Tool built by</Typography>
+                <img src={PeerislandsLogo} alt="peerislands_logo" style={{ width: '8%', paddingBottom: '10px' }} />
+                <Typography variant="body2" style={{ paddingLeft: '10px', paddingRight: '10px' }}>Powered by</Typography>
+                <img src={GoogleLogo} alt="google_logo" style={{ width: '8%', paddingRight: '10px' }} />and
+                <img src={MongoDBLogo} alt="mongodb_logo" style={{ width: '12%', paddingLeft: '10px', paddingBottom: '8px' }} />
+            </Box>
         </Box >
     );
 };
