@@ -36,7 +36,7 @@ function App() {
           <NavigationDrawer />
           <MongoLogin />
           <InputField />
-          <Footer />
+          {/* <Footer /> */}
         </ThemeProvider>
       </header>
     </div >

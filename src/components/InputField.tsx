@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Box, TextField, FormControl, InputLabel, Select, MenuItem, Button, ToggleButtonGroup, ToggleButton, Divider, Typography, CircularProgress } from '@mui/material';
 import axios from 'axios';
 import { styled } from '@mui/system';
+import Footer from "./Footer";
 
 const StyledBox = styled(Box)(({ theme }) => ({
     padding: theme.spacing(2),
@@ -274,6 +275,7 @@ const InputField: React.FC = () => {
                 variant="outlined"
                 fullWidth
             />
+            <Footer />
         </Box >
     );
 };
