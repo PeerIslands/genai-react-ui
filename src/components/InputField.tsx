@@ -1,53 +1,37 @@
 import React, { useState } from "react";
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
-import Box from '@mui/material/Box';
-import FormControl from '@mui/material/FormControl';
-import InputLabel from '@mui/material/InputLabel';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
+import { Box, TextField, FormControl, InputLabel, Select, MenuItem, Button, ToggleButtonGroup, ToggleButton, Divider, Typography, CircularProgress } from '@mui/material';
 import axios from 'axios';
-import Typography from "@mui/material/Typography";
 import { styled } from '@mui/system';
-import CircularProgress from '@mui/material/CircularProgress';
 
-
-// Import the images
-import GoogleLogo from '../images/google.png';
-import MongoDBLogo from '../images/mongodb.png';
-
+const StyledBox = styled(Box)(({ theme }) => ({
+    padding: theme.spacing(2),
+    border: `1px solid ${theme.palette.divider}`,
+    borderRadius: theme.shape.borderRadius,
+    backgroundColor: theme.palette.background.paper,
+}));
 
 const InputField: React.FC = () => {
-    // Google query related variables
     const [input, setInput] = useState("");
+    const [examples, setExamples] = useState("");
+    const [test, setTest] = useState("");
     const [response, setResponse] = useState("");
     const [temperature, setTemperature] = useState(0.3);
     const [maxOutputTokens, setMaxOutputTokens] = useState(512);
-    const [task, setTask] = useState('GENERATION');
+    const [topK, setTopK] = useState(1);
+    const [topP, setTopP] = useState(1);
     const [model, setModel] = useState("code-bison");
-
-    const [mode, setMode] = useState("freeform");
-    const [question, setQuestion] = useState("");
-    const [examples, setExamples] = useState("");
-    const [test, setTest] = useState("");
-
-
-    // Loading
     const [loading, setLoading] = useState(false);
+    const [inputMode, setInputMode] = useState('freeform');
 
-    // MongoDB
-    const [mongoUri, setMongoUri] = useState("");
-    const [databases, setDatabases] = useState([]);
-    const [collections, setCollections] = useState([]);
-    const [selectedDatabase, setSelectedDatabase] = useState("");
-    const [selectedCollection, setSelectedCollection] = useState("");
-
-
+    // Handle input mode change
+    const handleModeChange = (event: React.MouseEvent<HTMLElement>, mode: string) => {
+        setInputMode(mode);
+    };
     const handleButtonClick = async () => {
         setLoading(true);
 
         try {
-            const response = await axios.post('http://0.0.0.0:8080/api/v1/predict',
+            const response = await axios.post('http://localhost:8080/api/v1/predict',
                 {
                     instances: [
                         {
@@ -56,9 +40,10 @@ const InputField: React.FC = () => {
                         }
                     ],
                     parameters: {
-                        task: "GENERATION",
                         temperature: temperature,
                         maxOutputTokens: maxOutputTokens,
+                        topK: topK,
+                        topP: topP,
                         candidateCount: 1
                     }
                 },
@@ -82,163 +67,126 @@ const InputField: React.FC = () => {
         }
     };
 
-
-
-    const connectToMongo = async () => {
-        try {
-            const res = await axios.post('/api/mongo/connect', { uri: mongoUri });
-            setDatabases(res.data.databases);
-            setCollections(res.data.collections);
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
-    const handleDatabaseChange = (event: SelectChangeEvent) => {
-        setSelectedDatabase(event.target.value as string);
-    };
-
-    const handleCollectionChange = (event: SelectChangeEvent) => {
-        setSelectedCollection(event.target.value as string);
-    };
-
-
-    const TextGreen = styled('span')({
-        color: 'forestgreen',
-    });
-
-    const TextBlue = styled('span')({
-        color: '#4285F4',
-        marginRight: '10px'
-    });
-
     return (
         <Box
             sx={{
                 display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
                 flexDirection: 'column',
+                alignItems: 'center',
                 gap: '20px',
                 padding: '10px',
-                height: '90vh'
+                paddingTop: '200px',
+                height: '90vh',
+                '& > :not(style)': { width: '70vw' }
             }}
         >
+            <Typography variant="h2" component="h2">
+                Query Builder
+            </Typography>
+            <Typography variant="h5" component="h2">
+                Convert natural language to MongoDB queries with Google AI
+            </Typography>
+            <ToggleButtonGroup
+                value={inputMode}
+                exclusive
+                onChange={handleModeChange}
+                sx={{ marginBottom: '20px' }}
+            >
+                <ToggleButton value="freeform">
+                    Free form
+                </ToggleButton>
+                <ToggleButton value="structured">
+                    Structured
+                </ToggleButton>
+            </ToggleButtonGroup>
             <Box
                 sx={{
                     display: 'flex',
-                    justifyContent: 'center',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    marginBottom: '50px',
+                    flexDirection: 'row',
+                    alignItems: 'start',
+                    justifyContent: 'space-between',
+                    width: '100%',
                 }}
             >
-                <Typography variant="h2" component="h2" sx={{ marginTop: '100px', }}>
-                    Query Builder
-                </Typography>
-                <br />
-                <Typography variant="h5" component="h2">
-                    Convert natural language to <TextGreen>MongoDB</TextGreen> queries with <TextBlue>Google AI</TextBlue>
-
-                </Typography>
-                <br />
-                {/* <Box
+                <Box
                     sx={{
                         display: 'flex',
-                        justifyContent: 'center',
-                        width: '70vw',
-                        gap: '40px',
-                        '& img': {
-                            width: '15%',
-                            transition: 'transform .2s', // Animation
-                            '&:hover': {
-                                transform: 'scale(1.2)',
-                            },
-                        },
+                        flexDirection: 'column',
+                        alignItems: 'stretch',
+                        flexGrow: 1,
+                        marginRight: '20px',
                     }}
                 >
-                    <img src={GoogleLogo} alt="Google" />
-                    <img src={MongoDBLogo} alt="MongoDB" style={{ width: "200px" }} />
-                </Box> */}
+                    {inputMode === "freeform" && (
+                        <TextField
+                            value={input}
+                            onChange={(e) => setInput(e.target.value)}
+                            placeholder="Input Natural Language Query"
+                            multiline
+                            rows={4}
+                            variant="outlined"
+                            fullWidth
+                        />
+                    )}
 
-            </Box>
-            <Box
-                sx={{
-                    display: 'flex',
-                    justifyContent: 'flex-end',
-                    alignItems: 'center',
-                    gap: '20px',
-                    padding: '10px',
-                }}
-            >
-                <Button variant={mode === 'freeform' ? "contained" : "outlined"} onClick={() => setMode('freeform')}>Free Form</Button>
-                <Button variant={mode === 'structured' ? "contained" : "outlined"} onClick={() => setMode('structured')}>Structured</Button>
-            </Box>
+                    {inputMode === "structured" && (
+                        <>
+                            <TextField
+                                value={input}
+                                onChange={(e) => setInput(e.target.value)}
+                                placeholder="Input Natural Language Query"
+                                multiline
+                                rows={4}
+                                variant="outlined"
+                                fullWidth
+                            />
+                            <TextField
+                                value={examples}
+                                onChange={(e) => setExamples(e.target.value)}
+                                placeholder="Examples"
+                                multiline
+                                rows={2}
+                                variant="outlined"
+                                fullWidth
+                                margin="normal"
+                            />
+                            <TextField
+                                value={test}
+                                onChange={(e) => setTest(e.target.value)}
+                                placeholder="Test"
+                                multiline
+                                rows={2}
+                                variant="outlined"
+                                fullWidth
+                                margin="normal"
+                            />
+                        </>
+                    )}
 
-            {mode === 'freeform' ? (
-                <TextField
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    placeholder="Ask a question to MongoDB"
-                    multiline
-                    rows={4}
-                    variant="outlined"
-                    sx={{ width: '70vw' }}
-                />
-            ) : (
-                <>
-                    <TextField
-                        value={question}
-                        onChange={(e) => setQuestion(e.target.value)}
-                        placeholder="Question"
-                        multiline
-                        rows={4}
-                        variant="outlined"
-                        sx={{ width: '70vw' }}
-                    />
-                    <TextField
-                        value={examples}
-                        onChange={(e) => setExamples(e.target.value)}
-                        placeholder="Examples"
-                        multiline
-                        rows={4}
-                        variant="outlined"
-                        sx={{ width: '70vw' }}
-                    />
-                    <TextField
-                        value={test}
-                        onChange={(e) => setTest(e.target.value)}
-                        placeholder="Test"
-                        multiline
-                        rows={4}
-                        variant="outlined"
-                        sx={{ width: '70vw' }}
-                    />
-                </>
-            )}
-
-
-            <Box
-                sx={{
-                    display: 'flex',
-                    justifyContent: 'flex-end',
-                    alignItems: 'center',
-                    gap: '20px',
-                    padding: '10px',
-                    marginBottom: '20px',
-                }}
-            >
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: '10px', alignItems: 'flex-end', minWidth: '200px' }}>
-                    <FormControl variant="outlined">
+                    {loading ? (
+                        <CircularProgress />
+                    ) : (
+                        <Button variant="contained" onClick={handleButtonClick} sx={{ marginTop: '20px' }} >Ask</Button>
+                    )}
+                </Box>
+                <StyledBox
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'stretch',
+                        width: '30%',
+                    }}
+                >
+                    <FormControl>
                         <InputLabel id="model-label">Model</InputLabel>
                         <Select
                             labelId="model-label"
                             label="Model"
                             value={model}
                             onChange={(e) => setModel(e.target.value as string)}
+                            fullWidth
                         >
                             <MenuItem value={"code-bison"}>code-bison</MenuItem>
-                            {/* Add other model options here */}
                         </Select>
                     </FormControl>
 
@@ -249,43 +197,54 @@ const InputField: React.FC = () => {
                         value={temperature}
                         onChange={(e) => setTemperature(parseFloat(e.target.value))}
                         variant="outlined"
+                        margin="normal"
+                        fullWidth
                     />
 
                     <TextField
                         id="max-tokens-label"
-                        label="Max Output Tokens"
+                        label="Max Tokens"
                         type="number"
                         value={maxOutputTokens}
                         onChange={(e) => setMaxOutputTokens(parseInt(e.target.value))}
                         variant="outlined"
+                        margin="normal"
+                        fullWidth
                     />
-                </Box>
-            </Box>
 
-            <TextField
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                placeholder="Ask a question to MongoDB"
-                multiline
-                rows={4}
-                variant="outlined"
-                sx={{ width: '70vw' }}
-            />
-            {loading ? (
-                <CircularProgress />
-            ) : (
-                <Button variant="contained" onClick={handleButtonClick}>Ask</Button>
-            )}
+                    <TextField
+                        id="top-k-label"
+                        label="Top K"
+                        type="number"
+                        value={topK}
+                        onChange={(e) => setTopK(parseInt(e.target.value))}
+                        variant="outlined"
+                        margin="normal"
+                        fullWidth
+                    />
+
+                    <TextField
+                        id="top-p-label"
+                        label="Top P"
+                        type="number"
+                        value={topP}
+                        onChange={(e) => setTopP(parseFloat(e.target.value))}
+                        variant="outlined"
+                        margin="normal"
+                        fullWidth
+                    />
+                </StyledBox>
+            </Box>
             <TextField
                 value={response}
                 InputProps={{
                     readOnly: true,
                 }}
-                placeholder="Returned query will be displayed here"
+                placeholder="Returned result will be displayed here"
                 multiline
                 rows={4}
                 variant="outlined"
-                sx={{ width: '70vw' }}
+                fullWidth
             />
         </Box >
     );
