@@ -67,6 +67,27 @@ const InputField: React.FC = () => {
         }
     };
 
+    const TextMongoGreen = styled('span')({
+        color: '#00684A',
+    });
+
+    const TextBlue = styled('span')({
+        color: '#4285F4',
+    });
+
+    const TextRed = styled('span')({
+        color: '#FF3E30',
+    });
+
+    const TextYellow = styled('span')({
+        color: '#F7B529',
+    });
+
+    const TextGreen = styled('span')({
+        color: '#179C52',
+    });
+
+
     return (
         <Box
             sx={{
@@ -76,7 +97,7 @@ const InputField: React.FC = () => {
                 gap: '20px',
                 padding: '10px',
                 paddingTop: '200px',
-                height: '90vh',
+                height: '80vh',
                 '& > :not(style)': { width: '70vw' }
             }}
         >
@@ -84,7 +105,13 @@ const InputField: React.FC = () => {
                 Query Builder
             </Typography>
             <Typography variant="h5" component="h2">
-                Convert natural language to MongoDB queries with Google AI
+                Convert natural language to <TextMongoGreen>MongoDB</TextMongoGreen> queries with
+                <TextBlue> G</TextBlue>
+                <TextRed>o</TextRed>
+                <TextYellow>o</TextYellow>
+                <TextBlue>g</TextBlue>
+                <TextGreen>l</TextGreen>
+                <TextRed>e</TextRed>
             </Typography>
             <ToggleButtonGroup
                 value={inputMode}
