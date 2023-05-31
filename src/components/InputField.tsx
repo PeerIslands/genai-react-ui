@@ -18,8 +18,6 @@ const InputField: React.FC = () => {
     const [response, setResponse] = useState("");
     const [temperature, setTemperature] = useState(0.3);
     const [maxOutputTokens, setMaxOutputTokens] = useState(512);
-    const [topK, setTopK] = useState(1);
-    const [topP, setTopP] = useState(1);
     const [model, setModel] = useState("code-bison");
     const [loading, setLoading] = useState(false);
     const [inputMode, setInputMode] = useState('freeform');
@@ -43,15 +41,12 @@ const InputField: React.FC = () => {
                     parameters: {
                         temperature: temperature,
                         maxOutputTokens: maxOutputTokens,
-                        topK: topK,
-                        topP: topP,
                         candidateCount: 1
                     }
                 },
                 {
                     headers: {
                         'Content-Type': 'application/json',
-                        'Access-Control-Allow-Origin': '*',
                     }
                 }
             );
@@ -241,27 +236,6 @@ const InputField: React.FC = () => {
                         fullWidth
                     />
 
-                    <TextField
-                        id="top-k-label"
-                        label="Top K"
-                        type="number"
-                        value={topK}
-                        onChange={(e) => setTopK(parseInt(e.target.value))}
-                        variant="outlined"
-                        margin="normal"
-                        fullWidth
-                    />
-
-                    <TextField
-                        id="top-p-label"
-                        label="Top P"
-                        type="number"
-                        value={topP}
-                        onChange={(e) => setTopP(parseFloat(e.target.value))}
-                        variant="outlined"
-                        margin="normal"
-                        fullWidth
-                    />
                 </StyledBox>
             </Box>
             <TextField
