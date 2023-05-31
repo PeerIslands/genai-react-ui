@@ -9,6 +9,7 @@ import MenuItem from '@mui/material/MenuItem';
 import axios from 'axios';
 import Typography from "@mui/material/Typography";
 import { styled } from '@mui/system';
+import CircularProgress from '@mui/material/CircularProgress';
 
 
 // Import the images
@@ -17,15 +18,24 @@ import MongoDBLogo from '../images/mongodb.png';
 
 
 const InputField: React.FC = () => {
+    // Google query related variables
     const [input, setInput] = useState("");
     const [response, setResponse] = useState("");
     const [temperature, setTemperature] = useState(0.3);
     const [maxOutputTokens, setMaxOutputTokens] = useState(512);
     const [task, setTask] = useState('GENERATION');
     const [model, setModel] = useState("code-bison");
-    const [uri, setUri] = useState("");
-    const [dbInfo, setDbInfo] = useState({ database: "", collection: "" });
 
+    const [mode, setMode] = useState("freeform");
+    const [question, setQuestion] = useState("");
+    const [examples, setExamples] = useState("");
+    const [test, setTest] = useState("");
+
+
+    // Loading
+    const [loading, setLoading] = useState(false);
+
+    // MongoDB
     const [mongoUri, setMongoUri] = useState("");
     const [databases, setDatabases] = useState([]);
     const [collections, setCollections] = useState([]);
@@ -34,21 +44,45 @@ const InputField: React.FC = () => {
 
 
     const handleButtonClick = async () => {
-        console.log(input);
-        const response = await new Promise((resolve) =>
-            setTimeout(() => resolve("Response from the server"), 1000)
-        );
-        setResponse(response as string);
-    };
+        setLoading(true);
 
-    const handleConnect = async () => {
         try {
-            const response = await axios.post('/api/connect', { uri });
-            setDbInfo(response.data);
+            const response = await axios.post('http://0.0.0.0:8080/api/v1/predict',
+                {
+                    instances: [
+                        {
+                            prefix: input,
+                            suffix: "",
+                        }
+                    ],
+                    parameters: {
+                        task: "GENERATION",
+                        temperature: temperature,
+                        maxOutputTokens: maxOutputTokens,
+                        candidateCount: 1
+                    }
+                },
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                }
+            );
+
+            const responseData = response.data;
+
+            console.log(responseData);
+            if (responseData && responseData.data) {
+                setResponse(responseData.data);
+            }
         } catch (error) {
-            console.error('Error connecting to MongoDB:', error);
+            console.error('Error making request:', error);
+        } finally {
+            setLoading(false);
         }
     };
+
+
 
     const connectToMongo = async () => {
         try {
@@ -131,119 +165,103 @@ const InputField: React.FC = () => {
             <Box
                 sx={{
                     display: 'flex',
-                    justifyContent: 'space-between',
-                    width: '70vw',
+                    justifyContent: 'flex-end',
+                    alignItems: 'center',
                     gap: '20px',
-                    marginBottom: '20px',
+                    padding: '10px',
                 }}
             >
-                <TextField
-                    value={mongoUri}
-                    onChange={(e) => setMongoUri(e.target.value)}
-                    placeholder="MongoDB URI"
-                    variant="outlined"
-                    sx={{ flexGrow: 1 }}
-                />
-                <Button variant="contained" onClick={connectToMongo}>Connect</Button>
+                <Button variant={mode === 'freeform' ? "contained" : "outlined"} onClick={() => setMode('freeform')}>Free Form</Button>
+                <Button variant={mode === 'structured' ? "contained" : "outlined"} onClick={() => setMode('structured')}>Structured</Button>
             </Box>
 
-            <div style={{ display: 'flex', justifyContent: 'space-between', width: '70vw', marginBottom: '20px' }}>
-                <FormControl variant="outlined" style={{ width: '48%' }}>
-                    <InputLabel id="database-label">Database</InputLabel>
-                    <Select
-                        labelId="database-label"
-                        value={selectedDatabase}
-                        onChange={handleDatabaseChange}
-                        label="Database"
-                    >
-                        {databases.map((db) => (
-                            <MenuItem key={db} value={db}>
-                                {db}
-                            </MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
-                <FormControl variant="outlined" style={{ width: '48%' }}>
-                    <InputLabel id="collection-label">Collection</InputLabel>
-                    <Select
-                        labelId="collection-label"
-                        value={selectedCollection}
-                        onChange={handleCollectionChange}
-                        label="Collection"
-                    >
-                        {collections.map((col) => (
-                            <MenuItem key={col} value={col}>
-                                {col}
-                            </MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
-            </div>
+            {mode === 'freeform' ? (
+                <TextField
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    placeholder="Ask a question to MongoDB"
+                    multiline
+                    rows={4}
+                    variant="outlined"
+                    sx={{ width: '70vw' }}
+                />
+            ) : (
+                <>
+                    <TextField
+                        value={question}
+                        onChange={(e) => setQuestion(e.target.value)}
+                        placeholder="Question"
+                        multiline
+                        rows={4}
+                        variant="outlined"
+                        sx={{ width: '70vw' }}
+                    />
+                    <TextField
+                        value={examples}
+                        onChange={(e) => setExamples(e.target.value)}
+                        placeholder="Examples"
+                        multiline
+                        rows={4}
+                        variant="outlined"
+                        sx={{ width: '70vw' }}
+                    />
+                    <TextField
+                        value={test}
+                        onChange={(e) => setTest(e.target.value)}
+                        placeholder="Test"
+                        multiline
+                        rows={4}
+                        variant="outlined"
+                        sx={{ width: '70vw' }}
+                    />
+                </>
+            )}
+
+
             <Box
                 sx={{
                     display: 'flex',
-                    justifyContent: 'space-between',
-                    width: '70vw',
+                    justifyContent: 'flex-end',
+                    alignItems: 'center',
                     gap: '20px',
+                    padding: '10px',
                     marginBottom: '20px',
                 }}
             >
-                <FormControl sx={{ flexGrow: 1 }}>
-                    <InputLabel id="model-label">Model</InputLabel>
-                    <Select
-                        labelId="model-label"
-                        label="Model"
-                        value={model}
-                        onChange={(e) => setModel(e.target.value as string)}
-                    >
-                        <MenuItem value={"code-bison"}>code-bison</MenuItem>
-                        {/* Add other model options here */}
-                    </Select>
-                </FormControl>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: '10px', alignItems: 'flex-end', minWidth: '200px' }}>
+                    <FormControl variant="outlined">
+                        <InputLabel id="model-label">Model</InputLabel>
+                        <Select
+                            labelId="model-label"
+                            label="Model"
+                            value={model}
+                            onChange={(e) => setModel(e.target.value as string)}
+                        >
+                            <MenuItem value={"code-bison"}>code-bison</MenuItem>
+                            {/* Add other model options here */}
+                        </Select>
+                    </FormControl>
 
-                <FormControl sx={{ flexGrow: 1 }}>
-                    <InputLabel id="temperature-label">Temperature</InputLabel>
-                    <Select
-                        labelId="temperature-label"
+                    <TextField
+                        id="temperature-label"
                         label="Temperature"
+                        type="number"
                         value={temperature}
-                        onChange={(e) => setTemperature(e.target.value as number)}
-                    >
-                        <MenuItem value={0.1}>0.1</MenuItem>
-                        <MenuItem value={0.3}>0.3</MenuItem>
-                        <MenuItem value={0.5}>0.5</MenuItem>
-                        {/* ... other values ... */}
-                    </Select>
-                </FormControl>
+                        onChange={(e) => setTemperature(parseFloat(e.target.value))}
+                        variant="outlined"
+                    />
 
-                <FormControl sx={{ flexGrow: 1 }}>
-                    <InputLabel id="max-tokens-label">Max Output Tokens</InputLabel>
-                    <Select
-                        labelId="max-tokens-label"
-                        label="Max-tokens"
+                    <TextField
+                        id="max-tokens-label"
+                        label="Max Output Tokens"
+                        type="number"
                         value={maxOutputTokens}
-                        onChange={(e) => setMaxOutputTokens(e.target.value as number)}
-                    >
-                        <MenuItem value={256}>256</MenuItem>
-                        <MenuItem value={512}>512</MenuItem>
-                        <MenuItem value={1024}>1024</MenuItem>
-                        {/* ... other values ... */}
-                    </Select>
-                </FormControl>
-
-                <FormControl sx={{ flexGrow: 1 }}>
-                    <InputLabel id="task-label">Task</InputLabel>
-                    <Select
-                        labelId="task-label"
-                        label="task"
-                        value={task}
-                        onChange={(e) => setTask(e.target.value as string)}
-                    >
-                        <MenuItem value={'GENERATION'}>Generation</MenuItem>
-                        {/* ... other values ... */}
-                    </Select>
-                </FormControl>
+                        onChange={(e) => setMaxOutputTokens(parseInt(e.target.value))}
+                        variant="outlined"
+                    />
+                </Box>
             </Box>
+
             <TextField
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
@@ -253,7 +271,11 @@ const InputField: React.FC = () => {
                 variant="outlined"
                 sx={{ width: '70vw' }}
             />
-            <Button variant="contained" onClick={handleButtonClick}>Ask</Button>
+            {loading ? (
+                <CircularProgress />
+            ) : (
+                <Button variant="contained" onClick={handleButtonClick}>Ask</Button>
+            )}
             <TextField
                 value={response}
                 InputProps={{
