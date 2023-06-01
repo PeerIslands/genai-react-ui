@@ -10,6 +10,7 @@ import { InputContext } from './InputContext';
 import CodeEditor from "./CodeEditor";
 import { Modal } from "@mui/material";
 import CodeMirror from '@uiw/react-codemirror';
+import { javascript } from '@codemirror/lang-javascript';
 import { js as beautify } from 'js-beautify';
 
 const StyledBox = styled(Box)(({ theme }) => ({
@@ -19,14 +20,28 @@ const StyledBox = styled(Box)(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
 }));
 
+const StyledCodeMirror = styled(CodeMirror)(({ theme }) => ({
+    height: '100%',
+    '& .CodeMirror': {
+        height: '100%',
+    },
+}));
+
 const ResultBox = styled(Box)(({ theme }) => ({
     position: 'relative',
     display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    minHeight: '150px',
-    paddingTop: theme.spacing(7),
+    flexDirection: 'column',
+    alignItems: 'stretch',
+    justifyContent: 'flex-start',
+    height: '400px',
+    overflowY: 'auto',
+    width: '100%',
+    border: `1px solid ${theme.palette.divider}`,
+    borderRadius: theme.shape.borderRadius,
+    backgroundColor: theme.palette.background.paper,
 }));
+
+
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
     width: '100%',
@@ -34,7 +49,11 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
 
 const StyledCircularProgress = styled(CircularProgress)(({ theme }) => ({
     position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)'
 }));
+
 
 const InputField: React.FC = () => {
     const [examples, setExamples] = useState("");
@@ -132,7 +151,7 @@ const InputField: React.FC = () => {
                 alignItems: 'center',
                 gap: '20px',
                 padding: '10px',
-                paddingTop: '150px',
+                paddingTop: '100px',
                 height: '80vh',
                 '& > :not(style)': { width: '70vw' }
             }}
@@ -305,6 +324,7 @@ const InputField: React.FC = () => {
                             </Box>
                             <CodeMirror
                                 value={prompt}
+                                readOnly={true}
                             />
                         </Box>
                     </Modal>
@@ -313,24 +333,19 @@ const InputField: React.FC = () => {
                 </StyledBox>
             </Box>
             <ResultBox>
-                <StyledTextField
-                    value={response}
-                    InputProps={{
-                        readOnly: true,
-                    }}
-                    placeholder="Returned result will be displayed here"
-                    multiline
-                    rows={10}
-                    variant="outlined"
-                />
+                {response ? (
+                    <StyledCodeMirror
+                        value={response}
+                        readOnly={true}
+                        extensions={[javascript()]}
+                    />
+                ) : (
+                    <Typography variant="body1" style={{ textAlign: 'center', color: 'grey', paddingTop: '20px' }}>
+                        Response will be displayed here
+                    </Typography>
+                )}
                 {loading && <StyledCircularProgress />}
             </ResultBox>
-            {/* <ResultBox>
-                <CodeEditor code={response} />
-                {loading && <StyledCircularProgress />}
-            </ResultBox> */}
-
-            {/* <Footer /> */}
             <Box
                 sx={{
                     display: 'flex',
