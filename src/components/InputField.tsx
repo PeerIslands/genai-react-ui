@@ -340,7 +340,7 @@ const InputField: React.FC = () => {
                     paddingTop: '40px',
                 }}
             >
-                <Typography variant="body2" style={{ paddingRight: '10px' }}>Tool built by</Typography>
+                <Typography variant="body2" style={{ paddingRight: '10px' }}>Built by</Typography>
                 <img src={PeerislandsLogo} alt="peerislands_logo" style={{ width: '8%', paddingBottom: '10px' }} />
                 <Typography variant="body2" style={{ paddingLeft: '10px', paddingRight: '10px' }}>Powered by</Typography>
                 <img src={GoogleLogo} alt="google_logo" style={{ width: '8%', paddingRight: '10px' }} />and
