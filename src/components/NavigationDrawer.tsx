@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Drawer, IconButton, Box } from '@mui/material';
+import { Drawer, IconButton, Box, Typography, Button } from '@mui/material';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
@@ -9,6 +9,7 @@ import RestoreIcon from '@mui/icons-material/Restore';
 import { InputContext } from './InputContext';
 import axios from 'axios';
 import ProfilePic from '../images/avatar.png';
+import BookIcon from '@mui/icons-material/Book';
 
 const NavigationDrawer: React.FC = () => {
     const [drawerOpen, setDrawerOpen] = useState(false);
@@ -41,7 +42,7 @@ const NavigationDrawer: React.FC = () => {
 
     const list = () => (
         <Box
-            sx={{ width: 250 }}
+            sx={{ width: 900 }}
             role="presentation"
             onClick={toggleDrawer(false)}
             onKeyDown={toggleDrawer(false)}
@@ -61,10 +62,13 @@ const NavigationDrawer: React.FC = () => {
 
     return (
         <>
-            <IconButton onClick={toggleDrawer(true)} style={{ position: 'fixed', left: '20px', top: '20px' }}>
-                <Avatar src={ProfilePic} alt="Profile" style={{ border: "1.5px solid white" }} />
-            </IconButton>
-            <Drawer anchor='left' open={drawerOpen} onClose={toggleDrawer(false)}>
+            <Button
+                onClick={toggleDrawer(true)} style={{ position: 'fixed', right: '20px', top: '20px' }}>
+                {/* <Avatar src={ProfilePic} alt="Profile" style={{ border: "1.5px solid white" }} /> */}
+                <BookIcon sx={{ color: "black", border: "1.5px solid white" }} />
+                <Typography variant="body2" style={{ paddingLeft: '10px', paddingRight: '10px', paddingTop: '2px', color: 'black' }}>History</Typography>
+            </Button>
+            <Drawer anchor='right' open={drawerOpen} onClose={toggleDrawer(false)}>
                 {list()}
             </Drawer>
         </>

@@ -12,6 +12,8 @@ import CodeMirror from '@uiw/react-codemirror';
 import { javascript } from '@codemirror/lang-javascript';
 import { json } from '@codemirror/lang-json';
 import { js as beautify } from 'js-beautify';
+import { Snackbar, Alert, IconButton } from '@mui/material';
+import FileCopy from '@mui/icons-material/FileCopy';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     padding: theme.spacing(2),
@@ -25,20 +27,6 @@ const StyledCodeMirror = styled(CodeMirror)(({ theme }) => ({
     '& .CodeMirror': {
         height: '100%',
     },
-}));
-
-const ResultBox = styled(Box)(({ theme }) => ({
-    position: 'relative',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'stretch',
-    justifyContent: 'flex-start',
-    height: '400px',
-    overflowY: 'auto',
-    width: '100%',
-    border: `1px solid ${theme.palette.divider}`,
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: theme.palette.background.paper,
 }));
 
 
@@ -70,6 +58,24 @@ const InputField: React.FC = () => {
     const { addQuery } = useContext(QueryContext);
     const { input, setInput } = useContext(InputContext);
     const [open, setOpen] = useState(false);
+    const [copySuccess, setCopySuccess] = useState(false);
+    const [openSnackbar, setOpenSnackbar] = useState(false);
+    const [openPromptSnackbar, setOpenPromptSnackbar] = useState(false);
+
+    const ResultBox = styled(Box)(({ theme }) => ({
+        position: 'relative',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'stretch',
+        justifyContent: 'flex-start',
+        height: '400px',
+        minHeight: inputMode == 'structured' ? '200px' : '250px',
+        overflowY: 'auto',
+        width: '100%',
+        border: `1px solid ${theme.palette.divider}`,
+        borderRadius: theme.shape.borderRadius,
+        backgroundColor: theme.palette.background.paper,
+    }));
 
     const handleModeChange = (event: React.MouseEvent<HTMLElement>, mode: string) => {
         setInputMode(mode);
@@ -80,6 +86,41 @@ const InputField: React.FC = () => {
         setOpen(true);
     }
     const handleClose = () => setOpen(false);
+
+    const handleCopyClick = () => {
+        navigator.clipboard.writeText(response)
+            .then(() => {
+                setOpenSnackbar(true);
+            })
+            .catch(err => {
+                console.log('Something went wrong', err);
+            });
+    };
+
+    const handleCloseSnackbar = (event?: React.SyntheticEvent | Event, reason?: string) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setOpenSnackbar(false);
+    };
+
+    const handlePromptCopyClick = () => {
+        navigator.clipboard.writeText(prompt)
+            .then(() => {
+                setOpenPromptSnackbar(true);
+            })
+            .catch(err => {
+                console.log('Something went wrong', err);
+            });
+    };
+
+    const handleClosePromptSnackbar = (event?: React.SyntheticEvent | Event, reason?: string) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setOpenPromptSnackbar(false);
+    };
 
     const handleButtonClick = async () => {
         setLoading(true);
@@ -150,7 +191,7 @@ const InputField: React.FC = () => {
                 alignItems: 'center',
                 gap: '20px',
                 padding: '10px',
-                paddingTop: '100px',
+                paddingTop: '60px',
                 height: '80vh',
                 '& > :not(style)': { width: '70vw' }
             }}
@@ -315,17 +356,25 @@ const InputField: React.FC = () => {
                                 overflowY: 'scroll',
                             }}
                         >
-                            <Typography id="modal-modal-title" variant="h6" component="h2">
+                            <Typography id="modal-modal-title" variant="h4" component="h2">
                                 Prompt
                             </Typography>
                             <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                                <Button variant="contained" onClick={() => navigator.clipboard.writeText(prompt)} sx={{ marginBottom: '20px' }}>Copy Prompt</Button>
+                                {/* <Button variant="contained" onClick={() => navigator.clipboard.writeText(prompt)} sx={{ marginBottom: '20px' }}>Copy Prompt</Button> */}
+                                <IconButton onClick={handlePromptCopyClick} sx={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '20px', color: 'black' }}>
+                                    <FileCopy />
+                                </IconButton>
                             </Box>
                             <CodeMirror
                                 value={prompt}
                                 readOnly={true}
                                 extensions={[javascript(), json()]}
                             />
+                            <Snackbar open={openPromptSnackbar} autoHideDuration={6000} onClose={handleClosePromptSnackbar}>
+                                <Alert onClose={handleClosePromptSnackbar} severity="success" sx={{ width: '100%' }}>
+                                    Prompt copied to clipboard!
+                                </Alert>
+                            </Snackbar>
                         </Box>
                     </Modal>
 
@@ -344,6 +393,14 @@ const InputField: React.FC = () => {
                         Response will be displayed here
                     </Typography>
                 )}
+                <IconButton onClick={handleCopyClick} sx={{ position: 'absolute', bottom: '15px', right: '15px', color: 'black' }}>
+                    <FileCopy />
+                </IconButton>
+                <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleCloseSnackbar}>
+                    <Alert onClose={handleCloseSnackbar} severity="success" sx={{ width: '100%' }}>
+                        Response copied to clipboard!
+                    </Alert>
+                </Snackbar>
                 {loading && <StyledCircularProgress />}
             </ResultBox>
             <Box
