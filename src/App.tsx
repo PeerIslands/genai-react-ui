@@ -26,6 +26,8 @@ const Shapes = () => (
 function App() {
 
   const [input, setInput] = useState('');
+  const [prompt, setPrompt] = useState('');
+  const [response, setResponse] = useState('');
   const [history, setHistory] = useState<string[]>([]);
 
   const addQuery = (query: string) => {
@@ -42,7 +44,7 @@ function App() {
         />
         <ThemeProvider theme={theme}>
           <QueryContext.Provider value={{ history, addQuery }}>
-            <InputContext.Provider value={{ input, setInput }}>
+            <InputContext.Provider value={{ input, setInput, prompt, setPrompt, response, setResponse }}>
               <InputField />
               <NavigationDrawer />
             </InputContext.Provider>

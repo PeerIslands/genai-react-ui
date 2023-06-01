@@ -7,6 +7,10 @@ import GoogleLogo from '../images/google.png';
 import MongoDBLogo from '../images/mongodb.png';
 import { QueryContext } from './QueryContext';
 import { InputContext } from './InputContext';
+import CodeEditor from "./CodeEditor";
+import { Modal } from "@mui/material";
+import CodeMirror from '@uiw/react-codemirror';
+import { js as beautify } from 'js-beautify';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     padding: theme.spacing(2),
@@ -35,7 +39,10 @@ const StyledCircularProgress = styled(CircularProgress)(({ theme }) => ({
 const InputField: React.FC = () => {
     const [examples, setExamples] = useState("");
     const [test, setTest] = useState("");
-    const [response, setResponse] = useState("");
+
+    const { response, setResponse } = useContext(InputContext);
+    const { prompt, setPrompt } = useContext(InputContext);
+
     const [temperature, setTemperature] = useState(0.3);
     const [maxOutputTokens, setMaxOutputTokens] = useState(512);
     const [model, setModel] = useState("code-bison");
@@ -43,11 +50,19 @@ const InputField: React.FC = () => {
     const [inputMode, setInputMode] = useState('freeform');
     const { addQuery } = useContext(QueryContext);
     const { input, setInput } = useContext(InputContext);
+    const [open, setOpen] = useState(false);
 
     // Handle input mode change
     const handleModeChange = (event: React.MouseEvent<HTMLElement>, mode: string) => {
         setInputMode(mode);
     };
+
+    const handleOpen = () => {
+        setPrompt(beautify(prompt));
+        setOpen(true);
+    }
+    const handleClose = () => setOpen(false);
+
     const handleButtonClick = async () => {
         setLoading(true);
         setResponse("");
@@ -76,8 +91,9 @@ const InputField: React.FC = () => {
             );
 
             console.log(response);
-            if (response) {
-                setResponse(response.data);
+            if (response && response.data) {
+                setResponse(response.data.code);
+                setPrompt(response.data.prompt);
             }
         } catch (error) {
             console.error('Error making request:', error);
@@ -85,6 +101,7 @@ const InputField: React.FC = () => {
             setLoading(false);
         }
     };
+
 
     const TextMongoGreen = styled('span')({
         color: '#00684A',
@@ -258,6 +275,41 @@ const InputField: React.FC = () => {
                         fullWidth
                     />
 
+                    <Button variant="contained" onClick={handleOpen} sx={{ marginTop: '20px' }}>Show Prompt</Button>
+
+
+                    <Modal
+                        open={open}
+                        onClose={handleClose}
+                        aria-labelledby="modal-modal-title"
+                        aria-describedby="modal-modal-description"
+                    >
+                        <Box
+                            sx={{
+                                position: 'fixed',  // Make it fixed instead of absolute
+                                top: '10%',  // 5% from the top
+                                left: '10%',  // 5% from the left
+                                width: '70%',  // 90% of the screen width
+                                height: '70%',  // 90% of the screen height
+                                bgcolor: 'background.paper',
+                                boxShadow: 24,
+                                p: 4,
+                                overflowY: 'scroll',  // Make it scrollable
+                            }}
+                        >
+                            <Typography id="modal-modal-title" variant="h6" component="h2">
+                                Prompt
+                            </Typography>
+                            <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                                <Button variant="contained" onClick={() => navigator.clipboard.writeText(prompt)} sx={{ marginBottom: '20px' }}>Copy Prompt</Button>
+                            </Box>
+                            <CodeMirror
+                                value={prompt}
+                            />
+                        </Box>
+                    </Modal>
+
+
                 </StyledBox>
             </Box>
             <ResultBox>
@@ -273,6 +325,11 @@ const InputField: React.FC = () => {
                 />
                 {loading && <StyledCircularProgress />}
             </ResultBox>
+            {/* <ResultBox>
+                <CodeEditor code={response} />
+                {loading && <StyledCircularProgress />}
+            </ResultBox> */}
+
             {/* <Footer /> */}
             <Box
                 sx={{
@@ -280,6 +337,7 @@ const InputField: React.FC = () => {
                     flexDirection: 'row',
                     alignItems: 'center',
                     justifyContent: 'center',
+                    paddingTop: '40px',
                 }}
             >
                 <Typography variant="body2" style={{ paddingRight: '10px' }}>Tool built by</Typography>

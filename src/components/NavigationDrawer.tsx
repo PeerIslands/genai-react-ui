@@ -1,26 +1,44 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Drawer, IconButton, Box } from '@mui/material';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
+import ListItemIcon from '@mui/material/ListItemIcon';
 import Avatar from '@mui/material/Avatar';
-import KeyIcon from '@mui/icons-material/Key';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import SettingsIcon from '@mui/icons-material/Settings';
-import { QueryContext } from './QueryContext';
+import RestoreIcon from '@mui/icons-material/Restore';
 import { InputContext } from './InputContext';
+import axios from 'axios';
 
 // Import the image for the avatar
 import ProfilePic from '../images/avatar.png';
 
 const NavigationDrawer: React.FC = () => {
     const [drawerOpen, setDrawerOpen] = useState(false);
-    const { history } = useContext(QueryContext);
-    const { setInput } = useContext(InputContext);
+    const [historyItems, setHistoryItems] = useState([]);
+    const [selectedItem, setSelectedItem] = useState(null);
+    const { setInput, setPrompt, setResponse } = useContext(InputContext);
 
     const toggleDrawer = (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
         setDrawerOpen(open);
+    };
+
+    const fetchHistory = async () => {
+        const response = await axios.get('http://0.0.0.0:8080/api/v1/history');
+        console.log(response.data);
+        setHistoryItems(response.data);
+    }
+
+    useEffect(() => {
+        if (drawerOpen) {
+            fetchHistory();
+        }
+    }, [drawerOpen]);
+
+    const handleHistoryClick = (item: any) => {
+        setSelectedItem(item);
+        setInput(item.question);
+        setPrompt(item.prompt);
+        setResponse(item.code);
     };
 
     const list = () => (
@@ -31,9 +49,12 @@ const NavigationDrawer: React.FC = () => {
             onKeyDown={toggleDrawer(false)}
         >
             <List>
-                {history.map((query, index) => (
-                    <ListItem button key={index} onClick={() => setInput(query)}>
-                        <ListItemText primary={query} />
+                {historyItems.map((item, index) => (
+                    <ListItem button key={index} onClick={() => handleHistoryClick(item)}>
+                        <ListItemIcon>
+                            <RestoreIcon />
+                        </ListItemIcon>
+                        <ListItemText primary={item['question']} />
                     </ListItem>
                 ))}
             </List>
