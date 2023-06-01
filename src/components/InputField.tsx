@@ -7,7 +7,6 @@ import GoogleLogo from '../images/google.png';
 import MongoDBLogo from '../images/mongodb.png';
 import { QueryContext } from './QueryContext';
 import { InputContext } from './InputContext';
-import CodeEditor from "./CodeEditor";
 import { Modal } from "@mui/material";
 import CodeMirror from '@uiw/react-codemirror';
 import { javascript } from '@codemirror/lang-javascript';
