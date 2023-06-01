@@ -8,8 +8,6 @@ import Avatar from '@mui/material/Avatar';
 import RestoreIcon from '@mui/icons-material/Restore';
 import { InputContext } from './InputContext';
 import axios from 'axios';
-
-// Import the image for the avatar
 import ProfilePic from '../images/avatar.png';
 
 const NavigationDrawer: React.FC = () => {

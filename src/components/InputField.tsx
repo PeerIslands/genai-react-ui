@@ -10,6 +10,7 @@ import { InputContext } from './InputContext';
 import { Modal } from "@mui/material";
 import CodeMirror from '@uiw/react-codemirror';
 import { javascript } from '@codemirror/lang-javascript';
+import { json } from '@codemirror/lang-json';
 import { js as beautify } from 'js-beautify';
 
 const StyledBox = styled(Box)(({ theme }) => ({
@@ -70,7 +71,6 @@ const InputField: React.FC = () => {
     const { input, setInput } = useContext(InputContext);
     const [open, setOpen] = useState(false);
 
-    // Handle input mode change
     const handleModeChange = (event: React.MouseEvent<HTMLElement>, mode: string) => {
         setInputMode(mode);
     };
@@ -304,15 +304,15 @@ const InputField: React.FC = () => {
                     >
                         <Box
                             sx={{
-                                position: 'fixed',  // Make it fixed instead of absolute
-                                top: '10%',  // 5% from the top
-                                left: '10%',  // 5% from the left
-                                width: '70%',  // 90% of the screen width
-                                height: '70%',  // 90% of the screen height
+                                position: 'fixed',
+                                top: '10%',
+                                left: '10%',
+                                width: '70%',
+                                height: '70%',
                                 bgcolor: 'background.paper',
                                 boxShadow: 24,
                                 p: 4,
-                                overflowY: 'scroll',  // Make it scrollable
+                                overflowY: 'scroll',
                             }}
                         >
                             <Typography id="modal-modal-title" variant="h6" component="h2">
@@ -324,6 +324,7 @@ const InputField: React.FC = () => {
                             <CodeMirror
                                 value={prompt}
                                 readOnly={true}
+                                extensions={[javascript(), json()]}
                             />
                         </Box>
                     </Modal>
@@ -335,8 +336,8 @@ const InputField: React.FC = () => {
                 {response ? (
                     <StyledCodeMirror
                         value={response}
-                        readOnly={true}
-                        extensions={[javascript()]}
+                        readOnly={false}
+                        extensions={[javascript(), json()]}
                     />
                 ) : (
                     <Typography variant="body1" style={{ textAlign: 'center', color: 'grey', paddingTop: '20px' }}>

@@ -5,6 +5,7 @@
   "main": "public/electron.js",
   "dependencies": {
     "@codemirror/lang-javascript": "^6.1.8",
+    "@codemirror/lang-json": "^6.0.1",
     "@emotion/react": "^11.11.0",
     "@emotion/styled": "^11.11.0",
     "@leafygreen-ui/palette": "^4.0.4",
