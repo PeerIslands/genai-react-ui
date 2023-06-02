@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Drawer, IconButton, Box, Typography, Button } from '@mui/material';
+import { Drawer, IconButton, Box, Typography, Button, Divider } from '@mui/material';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
@@ -10,6 +10,7 @@ import { InputContext } from './InputContext';
 import axios from 'axios';
 import ProfilePic from '../images/avatar.png';
 import BookIcon from '@mui/icons-material/Book';
+import RefreshIcon from '@mui/icons-material/Refresh';
 
 const NavigationDrawer: React.FC = () => {
     const [drawerOpen, setDrawerOpen] = useState(false);
@@ -22,7 +23,7 @@ const NavigationDrawer: React.FC = () => {
     };
 
     const fetchHistory = async () => {
-        const response = await axios.get('http://0.0.0.0:8080/api/v1/history');
+        const response = await axios.get('http://0.0.0.0:8080/api/v1/history?limit=20');
         console.log(response.data);
         setHistoryItems(response.data);
     }
@@ -47,14 +48,27 @@ const NavigationDrawer: React.FC = () => {
             onClick={toggleDrawer(false)}
             onKeyDown={toggleDrawer(false)}
         >
+            <Box sx={{ display: 'flex', justifyContent: 'flex-end', paddingRight: 2, paddingTop: 2, alignItems: 'center' }}>
+                <Typography variant="h6" sx={{ paddingRight: 2 }}>History</Typography>
+                <IconButton onClick={(event) => {
+                    event.stopPropagation();
+                    fetchHistory();
+                }}>
+                    <RefreshIcon />
+                </IconButton>
+            </Box>
+            <Divider />
             <List>
                 {historyItems.map((item, index) => (
-                    <ListItem button key={index} onClick={() => handleHistoryClick(item)}>
-                        <ListItemIcon>
-                            <RestoreIcon />
-                        </ListItemIcon>
-                        <ListItemText primary={item['question']} />
-                    </ListItem>
+                    <React.Fragment key={index}>
+                        <ListItem button onClick={() => handleHistoryClick(item)}>
+                            <ListItemIcon>
+                                <RestoreIcon />
+                            </ListItemIcon>
+                            <ListItemText primary={item['question']} />
+                        </ListItem>
+                        <Divider />
+                    </React.Fragment>
                 ))}
             </List>
         </Box>

@@ -132,10 +132,10 @@ const InputField: React.FC = () => {
                 {
                     instances: [
                         {
-                            prefix: input,
+                            prefix: input.replace(/"/g, '\\"'),
                             suffix: "",
-                            context: context,
-                            examples: examples,
+                            context: context.replace(/"/g, '\\"'),
+                            examples: examples.replace(/"/g, '\\"'),
                         }
                     ],
                     parameters: {
