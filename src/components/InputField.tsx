@@ -69,6 +69,36 @@ const InputField: React.FC = () => {
     const [isExampleModalOpen, setIsExampleModalOpen] = useState(false);
     const [isFullScreenEditor, setIsFullScreenEditor] = useState(false);
 
+    const [collections, setCollections] = useState([]);
+    const [selectedCollection, setSelectedCollection] = useState('');
+
+    const handleOpenContextModal = async () => {
+
+        try {
+            const response = await axios.get('http://localhost:8080/api/v1/collection_list');
+            console.log(response);
+            setCollections(response.data);
+        } catch (error) {
+            console.error('Failed to fetch collections', error);
+        }
+        setIsContextModalOpen(true);
+    };
+
+    const populateCollection = async () => {
+        try {
+            const response = await axios.get(`http://localhost:8080/api/v1/schema?collection=${selectedCollection}`);
+            console.log(response);
+            // check if response is null
+            if (response.data == null) {
+                console.log('response is null');
+                return;
+            }
+            setContext(context + '\n' + context + ' schema' + '\n' + response.data);
+        } catch (error) {
+            console.error('Failed to populate collection', error);
+        }
+    };
+
 
     const ResultBox = styled(Box)(({ theme }) => ({
         position: 'relative',
@@ -277,7 +307,7 @@ const InputField: React.FC = () => {
                                 fullWidth
                             />
                             <TextField
-                                onClick={isFullScreenEditor ? () => setIsContextModalOpen(true) : undefined}
+                                onClick={isFullScreenEditor ? () => handleOpenContextModal() : undefined}
                                 value={context}
                                 placeholder="Context"
                                 multiline
@@ -354,6 +384,28 @@ const InputField: React.FC = () => {
                             <IconButton onClick={() => setIsContextModalOpen(false)} sx={{ position: 'absolute', top: '5px', right: '5px', color: 'black', zIndex: 3 }}>
                                 <Close />
                             </IconButton>
+                            <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '50px', alignItems: 'center' }}>
+                                <FormControl sx={{ minWidth: '200px', marginRight: '20px' }}>
+                                    <InputLabel id="collection-label">Collection</InputLabel>
+                                    <Select
+                                        defaultValue="select collection schema"
+                                        labelId="collection-label"
+                                        value={selectedCollection}
+                                        onChange={(e) => setSelectedCollection(e.target.value as string)}
+                                    >
+                                        <MenuItem disabled value="select collection schema">
+                                            No schema available
+                                        </MenuItem>
+                                        {collections.map((collection: string) => (
+                                            <MenuItem key={collection} value={collection}>
+                                                {collection}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                                <Button variant="contained" onClick={populateCollection}>Populate</Button>
+                            </Box>
+
                             <CodeMirror
                                 autoFocus={true}
                                 value={context}
@@ -363,6 +415,7 @@ const InputField: React.FC = () => {
                             />
                         </Box>
                     </Modal>
+
 
                     <Modal
                         open={isExampleModalOpen}
@@ -445,17 +498,15 @@ const InputField: React.FC = () => {
                         fullWidth
                     />
 
-                    <FormControl>
-                        <FormControlLabel
-                            control={
-                                <Switch
-                                    checked={isFullScreenEditor}
-                                    onChange={toggleFullScreenEditor}
-                                />
-                            }
-                            label="Full screen editor"
-                        />
-                    </FormControl>
+                    <FormControlLabel
+                        control={
+                            <Switch
+                                checked={isFullScreenEditor}
+                                onChange={toggleFullScreenEditor}
+                            />
+                        }
+                        label="Full screen editor"
+                    />
 
                     <Button variant="contained" onClick={handleOpen} sx={{ marginTop: '20px' }}>Show Prompt</Button>
 
@@ -516,7 +567,7 @@ const InputField: React.FC = () => {
                         Response will be displayed here
                     </Typography>
                 )}
-                <IconButton onClick={handleCopyClick} sx={{ position: 'absolute', bottom: '15px', right: '15px', color: 'black' }}>
+                <IconButton onClick={handleCopyClick} sx={{ position: 'absolute', bottom: '15px', right: '15px', color: 'black', zindex: 1 }}>
                     <FileCopy />
                 </IconButton>
                 <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleCloseSnackbar}>
