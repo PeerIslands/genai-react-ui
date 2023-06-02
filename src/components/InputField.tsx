@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { Box, TextField, FormControl, InputLabel, Select, MenuItem, Button, ToggleButtonGroup, ToggleButton, Divider, Typography, CircularProgress } from '@mui/material';
+import { Box, TextField, FormControl, InputLabel, Select, MenuItem, Button, ToggleButtonGroup, ToggleButton, Divider, Typography, CircularProgress, Switch, FormControlLabel } from '@mui/material';
 import axios from 'axios';
 import { styled } from '@mui/system';
 import PeerislandsLogo from '../images/peerislands.png';
@@ -67,6 +67,7 @@ const InputField: React.FC = () => {
     const [isQuestionModalOpen, setIsQuestionModalOpen] = useState(false);
     const [isContextModalOpen, setIsContextModalOpen] = useState(false);
     const [isExampleModalOpen, setIsExampleModalOpen] = useState(false);
+    const [isFullScreenEditor, setIsFullScreenEditor] = useState(false);
 
 
     const ResultBox = styled(Box)(({ theme }) => ({
@@ -83,6 +84,10 @@ const InputField: React.FC = () => {
         borderRadius: theme.shape.borderRadius,
         // backgroundColor: theme.palette.background.paper,
     }));
+
+    const toggleFullScreenEditor = () => {
+        setIsFullScreenEditor(!isFullScreenEditor);
+    };
 
     const handleModeChange = (event: React.MouseEvent<HTMLElement>, mode: string) => {
         setInputMode(mode);
@@ -250,7 +255,7 @@ const InputField: React.FC = () => {
                 >
                     {inputMode === "freeform" && (
                         <TextField
-                            onClick={() => setIsQuestionModalOpen(true)}
+                            onClick={isFullScreenEditor ? () => setIsQuestionModalOpen(true) : undefined}
                             value={input}
                             placeholder="Question"
                             multiline
@@ -263,7 +268,7 @@ const InputField: React.FC = () => {
                     {inputMode === "structured" && (
                         <>
                             <TextField
-                                onClick={() => setIsQuestionModalOpen(true)}
+                                onClick={isFullScreenEditor ? () => setIsQuestionModalOpen(true) : undefined}
                                 value={input}
                                 placeholder="Question"
                                 multiline
@@ -272,7 +277,7 @@ const InputField: React.FC = () => {
                                 fullWidth
                             />
                             <TextField
-                                onClick={() => setIsContextModalOpen(true)}
+                                onClick={isFullScreenEditor ? () => setIsContextModalOpen(true) : undefined}
                                 value={context}
                                 placeholder="Context"
                                 multiline
@@ -282,7 +287,7 @@ const InputField: React.FC = () => {
                                 margin="normal"
                             />
                             <TextField
-                                onClick={() => setIsExampleModalOpen(true)}
+                                onClick={isFullScreenEditor ? () => setIsExampleModalOpen(true) : undefined}
                                 value={examples}
                                 placeholder="Examples"
                                 multiline
@@ -439,6 +444,18 @@ const InputField: React.FC = () => {
                         margin="normal"
                         fullWidth
                     />
+
+                    <FormControl>
+                        <FormControlLabel
+                            control={
+                                <Switch
+                                    checked={isFullScreenEditor}
+                                    onChange={toggleFullScreenEditor}
+                                />
+                            }
+                            label="Full screen editor"
+                        />
+                    </FormControl>
 
                     <Button variant="contained" onClick={handleOpen} sx={{ marginTop: '20px' }}>Show Prompt</Button>
 
