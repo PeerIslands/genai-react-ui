@@ -7,6 +7,12 @@ interface IInputContext {
     setPrompt: (prompt: string) => void;
     response: string;
     setResponse: (response: string) => void;
+    context: string;
+    setContext: (context: string) => void;
+    examples: string;
+    setExamples: (examples: string) => void;
+    temperature: number;
+    setTemperature: (temperature: number) => void;
 }
 
 export const InputContext = React.createContext<IInputContext>({
@@ -16,4 +22,10 @@ export const InputContext = React.createContext<IInputContext>({
     setPrompt: () => { },
     response: '',
     setResponse: () => { },
+    context: '',
+    setContext: () => { },
+    examples: '',
+    setExamples: () => { },
+    temperature: 0.5,
+    setTemperature: () => { },
 });

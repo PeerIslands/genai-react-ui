@@ -44,13 +44,13 @@ const StyledCircularProgress = styled(CircularProgress)(({ theme }) => ({
 
 
 const InputField: React.FC = () => {
-    const [context, setContext] = useState("");
-    const [examples, setExamples] = useState("");
+    const { context, setContext } = useContext(InputContext);
+    const { examples, setExamples } = useContext(InputContext);
 
     const { response, setResponse } = useContext(InputContext);
     const { prompt, setPrompt } = useContext(InputContext);
 
-    const [temperature, setTemperature] = useState(0.3);
+    const { temperature, setTemperature } = useContext(InputContext);
     const [maxOutputTokens, setMaxOutputTokens] = useState(512);
     const [model, setModel] = useState("code-bison");
     const [loading, setLoading] = useState(false);

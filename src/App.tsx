@@ -28,6 +28,9 @@ function App() {
   const [input, setInput] = useState('');
   const [prompt, setPrompt] = useState('');
   const [response, setResponse] = useState('');
+  const [context, setContext] = useState('');
+  const [examples, setExamples] = useState('');
+  const [temperature, setTemperature] = useState(0.5);
   const [history, setHistory] = useState<string[]>([]);
 
   const addQuery = (query: string) => {
@@ -44,7 +47,20 @@ function App() {
         />
         <ThemeProvider theme={theme}>
           <QueryContext.Provider value={{ history, addQuery }}>
-            <InputContext.Provider value={{ input, setInput, prompt, setPrompt, response, setResponse }}>
+            <InputContext.Provider value={{
+              input,
+              setInput,
+              prompt,
+              setPrompt,
+              response,
+              setResponse,
+              context,
+              setContext,
+              examples,
+              setExamples,
+              temperature,
+              setTemperature
+            }}>
               <InputField />
               <NavigationDrawer />
             </InputContext.Provider>
