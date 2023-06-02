@@ -108,7 +108,7 @@ const InputField: React.FC = () => {
         flexDirection: 'column',
         alignItems: 'stretch',
         justifyContent: 'flex-start',
-        height: '400px',
+        height: '100%',
         minHeight: inputMode == 'structured' ? '200px' : '250px',
         width: '100%',
         border: `0px solid ${theme.palette.divider}`,
@@ -312,7 +312,7 @@ const InputField: React.FC = () => {
                                 onClick={isFullScreenEditor ? () => handleOpenContextModal() : undefined}
                                 onChange={(e) => setContext(e.target.value)}
                                 value={context}
-                                placeholder="Context"
+                                placeholder="Context/Schema"
                                 multiline
                                 rows={2}
                                 variant="outlined"
@@ -350,7 +350,7 @@ const InputField: React.FC = () => {
                             width: '80vw',
                             overflowY: 'scroll',
                         }}>
-                            <Typography variant="h6" component="h2" sx={{ position: 'absolute', top: '10px', left: '10px', color: 'gray' }}>
+                            <Typography variant="h6" component="h2" sx={{ position: 'absolute', top: '20px', left: '20px', color: 'gray' }}>
                                 Enter your question
                             </Typography>
                             <IconButton onClick={() => setIsQuestionModalOpen(false)} sx={{ position: 'absolute', top: '5px', right: '5px', color: 'black', zIndex: 3 }}>
@@ -358,10 +358,11 @@ const InputField: React.FC = () => {
                             </IconButton>
                             <CodeMirror
                                 autoFocus={true}
+                                height="70vh"
                                 value={input}
                                 onChange={(value) => setInput(value)}
                                 extensions={[javascript(), json()]}
-                                style={{ paddingTop: '20px' }}
+                                style={{ paddingTop: '40px' }}
                                 theme={dracula}
                             />
                         </Box>
@@ -383,8 +384,8 @@ const InputField: React.FC = () => {
                             width: '80vw',
                             overflowY: 'scroll',
                         }}>
-                            <Typography variant="h6" component="h2" sx={{ position: 'absolute', top: '10px', left: '10px', color: 'gray' }}>
-                                Enter your context
+                            <Typography variant="h6" component="h2" sx={{ position: 'absolute', top: '20px', left: '20px', color: 'gray' }}>
+                                Enter your context/schema
                             </Typography>
                             <IconButton onClick={() => setIsContextModalOpen(false)} sx={{ position: 'absolute', top: '5px', right: '5px', color: 'black', zIndex: 3 }}>
                                 <Close />
@@ -418,10 +419,11 @@ const InputField: React.FC = () => {
 
                             <CodeMirror
                                 autoFocus={true}
+                                height="60vh"
                                 value={context}
                                 onChange={(value) => setContext(value)}
                                 extensions={[javascript(), json()]}
-                                style={{ paddingTop: '20px' }}
+                                style={{ paddingTop: '40px' }}
                                 theme={dracula}
                             />
                         </Box>
@@ -444,7 +446,7 @@ const InputField: React.FC = () => {
                             width: '80vw',
                             overflowY: 'scroll',
                         }}>
-                            <Typography variant="h6" component="h2" sx={{ position: 'absolute', top: '10px', left: '10px', color: 'gray' }}>
+                            <Typography variant="h6" component="h2" sx={{ position: 'absolute', top: '20px', left: '20px', color: 'gray' }}>
                                 Enter your example
                             </Typography>
                             <IconButton onClick={() => setIsExampleModalOpen(false)} sx={{ position: 'absolute', top: '5px', right: '5px', color: 'black', zIndex: 3 }}>
@@ -452,10 +454,11 @@ const InputField: React.FC = () => {
                             </IconButton>
                             <CodeMirror
                                 autoFocus={true}
+                                height="70vh"
                                 value={examples}
                                 onChange={(value) => setExamples(value)}
                                 extensions={[javascript(), json()]}
-                                style={{ paddingTop: '20px' }}
+                                style={{ paddingTop: '40px' }}
                                 theme={dracula}
                             />
                         </Box>
@@ -542,7 +545,7 @@ const InputField: React.FC = () => {
                                 overflowY: 'scroll',
                             }}
                         >
-                            <Typography id="modal-modal-title" variant="h4" component="h2">
+                            <Typography variant="h6" component="h2" sx={{ position: 'absolute', top: '20px', left: '20px', color: 'gray' }}>
                                 Prompt
                             </Typography>
                             <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
@@ -553,8 +556,10 @@ const InputField: React.FC = () => {
                             </Box>
                             <CodeMirror
                                 value={prompt}
+                                height="100%"
                                 readOnly={true}
                                 extensions={[javascript(), json()]}
+                                style={{ paddingTop: '40px' }}
                                 theme={dracula}
                             />
                             <Snackbar open={openPromptSnackbar} autoHideDuration={6000} onClose={handleClosePromptSnackbar}>
@@ -568,53 +573,64 @@ const InputField: React.FC = () => {
 
                 </StyledBox>
             </Box>
-            <ResultBox>
-                <IconButton onClick={handleCopyClick} sx={{ position: 'absolute', top: '5px', right: '5px', color: '#00684A', zindex: 1 }}>
-                    <FileCopy />
-                </IconButton>
-                {response ? (
-                    <div>
-                        <Typography variant="body1" style={{ textAlign: 'center', color: 'grey', paddingTop: '20px', paddingBottom: '20px' }}>
-                            Results
-                        </Typography>
-                        <div style={{ maxHeight: 'calc(100% - 40px)', overflowY: 'auto' }}>
-                            <CodeMirror
-                                value={response}
-                                height="100%"
-                                readOnly={false}
-                                extensions={[javascript(), json()]}
-                                theme={dracula}
-                                style={{ paddingBottom: '20px' }}
-                            />
-                        </div>
-                    </div>
-                ) : (
-                    <Typography variant="body1" style={{ textAlign: 'center', color: 'grey', paddingTop: '20px' }}>
-                        Response will be displayed here
-                    </Typography>
-                )}
-                <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleCloseSnackbar}>
-                    <Alert onClose={handleCloseSnackbar} severity="success" sx={{ width: '100%' }}>
-                        Response copied to clipboard!
-                    </Alert>
-                </Snackbar>
-                {loading && <StyledCircularProgress />}
-            </ResultBox>
-            <Box
-                sx={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    paddingTop: '40px',
-                }}
-            >
-                <Typography variant="body2" style={{ paddingRight: '10px' }}>Built by</Typography>
-                <img src={PeerislandsLogo} alt="peerislands_logo" style={{ width: '8%', paddingBottom: '10px' }} />
-                <Typography variant="body2" style={{ paddingLeft: '10px', paddingRight: '10px' }}>Powered by</Typography>
-                <img src={GoogleLogo} alt="google_logo" style={{ width: '8%', paddingRight: '10px' }} />and
-                <img src={MongoDBLogo} alt="mongodb_logo" style={{ width: '12%', paddingLeft: '10px', paddingBottom: '8px' }} />
-            </Box>
+            <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+                <Box sx={{ flex: '1 1 auto', overflowY: 'auto' }}>
+                    <ResultBox>
+                        <IconButton onClick={handleCopyClick} sx={{ position: 'absolute', top: '5px', right: '5px', color: '#00684A', zindex: 1 }}>
+                            <FileCopy />
+                        </IconButton>
+                        {response ? (
+                            <div>
+                                <Typography variant="body1" style={{ textAlign: 'center', color: 'grey', paddingTop: '20px', paddingBottom: '20px' }}>
+                                    Results
+                                </Typography>
+                                <div style={{ maxHeight: 'calc(100% - 40px)', overflowY: 'auto' }}>
+                                    <CodeMirror
+                                        value={response}
+                                        height="100%"
+                                        readOnly={false}
+                                        extensions={[javascript(), json()]}
+                                        theme={dracula}
+                                        style={{ paddingBottom: '20px' }}
+                                    />
+                                </div>
+                            </div>
+                        ) : (
+                            <Typography variant="body1" style={{ textAlign: 'center', color: 'grey', paddingTop: '20px' }}>
+                                Response will be displayed here
+                            </Typography>
+                        )}
+                        <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleCloseSnackbar}>
+                            <Alert onClose={handleCloseSnackbar} severity="success" sx={{ width: '100%' }}>
+                                Response copied to clipboard!
+                            </Alert>
+                        </Snackbar>
+                        {loading && <StyledCircularProgress />}
+                    </ResultBox>
+                </Box>
+                <Box
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        paddingTop: '10px',
+                        paddingBottom: '10px',
+                        marginTop: '50px',
+                        backgroundColor: '#fff'
+                    }}
+                >
+                    <Typography variant="body2" style={{ paddingRight: '10px' }}>Built by</Typography>
+                    <img src={PeerislandsLogo} alt="peerislands_logo" style={{ width: '5%', paddingBottom: '5px' }} />
+                    <Typography variant="body2" style={{ paddingLeft: '10px', paddingRight: '10px' }}>Powered by</Typography>
+                    <img src={GoogleLogo} alt="google_logo" style={{ width: '5%', paddingRight: '10px' }} />
+                    <span>and</span>
+                    <img src={MongoDBLogo} alt="mongodb_logo" style={{ width: '8%', paddingLeft: '10px', paddingBottom: '5px' }} />
+                </Box>
+
+
+            </Box >
+
         </Box >
     );
 };
