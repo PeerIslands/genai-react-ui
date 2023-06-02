@@ -25,7 +25,7 @@ const StyledBox = styled(Box)(({ theme }) => ({
 const StyledCodeMirror = styled(CodeMirror)(({ theme }) => ({
     height: '100%',
     '& .CodeMirror': {
-        height: '100%',
+        height: '100%'
     },
 }));
 
@@ -44,8 +44,8 @@ const StyledCircularProgress = styled(CircularProgress)(({ theme }) => ({
 
 
 const InputField: React.FC = () => {
+    const [context, setContext] = useState("");
     const [examples, setExamples] = useState("");
-    const [test, setTest] = useState("");
 
     const { response, setResponse } = useContext(InputContext);
     const { prompt, setPrompt } = useContext(InputContext);
@@ -74,7 +74,7 @@ const InputField: React.FC = () => {
         width: '100%',
         border: `1px solid ${theme.palette.divider}`,
         borderRadius: theme.shape.borderRadius,
-        backgroundColor: theme.palette.background.paper,
+        // backgroundColor: theme.palette.background.paper,
     }));
 
     const handleModeChange = (event: React.MouseEvent<HTMLElement>, mode: string) => {
@@ -134,6 +134,8 @@ const InputField: React.FC = () => {
                         {
                             prefix: input,
                             suffix: "",
+                            context: context,
+                            examples: examples,
                         }
                     ],
                     parameters: {
@@ -256,16 +258,16 @@ const InputField: React.FC = () => {
                             <TextField
                                 value={input}
                                 onChange={(e) => setInput(e.target.value)}
-                                placeholder="Input Natural Language Query"
+                                placeholder="Question"
                                 multiline
                                 rows={4}
                                 variant="outlined"
                                 fullWidth
                             />
                             <TextField
-                                value={examples}
-                                onChange={(e) => setExamples(e.target.value)}
-                                placeholder="Examples"
+                                value={context}
+                                onChange={(e) => setContext(e.target.value)}
+                                placeholder="Context"
                                 multiline
                                 rows={2}
                                 variant="outlined"
@@ -273,9 +275,9 @@ const InputField: React.FC = () => {
                                 margin="normal"
                             />
                             <TextField
-                                value={test}
-                                onChange={(e) => setTest(e.target.value)}
-                                placeholder="Test"
+                                value={examples}
+                                onChange={(e) => setExamples(e.target.value)}
+                                placeholder="Examples"
                                 multiline
                                 rows={2}
                                 variant="outlined"
