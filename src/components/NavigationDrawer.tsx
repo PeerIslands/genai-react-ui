@@ -82,7 +82,7 @@ const NavigationDrawer: React.FC = () => {
             <Button
                 onClick={toggleDrawer(true)} style={{ position: 'fixed', right: '20px', top: '20px' }}>
                 {/* <Avatar src={ProfilePic} alt="Profile" style={{ border: "1.5px solid white" }} /> */}
-                <BookIcon sx={{ color: "black", border: "1.5px solid white" }} />
+                <BookIcon sx={{ color: "#00684A", border: "1.5px solid white" }} />
                 <Typography variant="body2" style={{ paddingLeft: '10px', paddingRight: '10px', paddingTop: '2px', color: 'black' }}>History</Typography>
             </Button>
             <Drawer anchor='right' open={drawerOpen} onClose={toggleDrawer(false)}>

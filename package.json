@@ -4,6 +4,7 @@
   "private": true,
   "main": "public/electron.js",
   "dependencies": {
+    "@codemirror/basic-setup": "^0.20.0",
     "@codemirror/lang-javascript": "^6.1.8",
     "@codemirror/lang-json": "^6.0.1",
     "@emotion/react": "^11.11.0",
@@ -20,6 +21,7 @@
     "@types/node": "^16.18.34",
     "@types/react": "^18.2.7",
     "@types/react-dom": "^18.2.4",
+    "@uiw/codemirror-theme-dracula": "^4.20.2",
     "@uiw/codemirror-theme-vscode": "^4.20.2",
     "@uiw/codemirror-themes": "^4.20.2",
     "@uiw/react-codemirror": "^4.20.2",

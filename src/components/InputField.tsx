@@ -16,6 +16,8 @@ import { Snackbar, Alert, IconButton } from '@mui/material';
 import FileCopy from '@mui/icons-material/FileCopy';
 import Close from '@mui/icons-material/Close';
 
+//THEMES
+import { dracula, draculaInit } from '@uiw/codemirror-theme-dracula';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     padding: theme.spacing(2),
@@ -108,11 +110,9 @@ const InputField: React.FC = () => {
         justifyContent: 'flex-start',
         height: '400px',
         minHeight: inputMode == 'structured' ? '200px' : '250px',
-        overflowY: 'auto',
         width: '100%',
-        border: `1px solid ${theme.palette.divider}`,
+        border: `0px solid ${theme.palette.divider}`,
         borderRadius: theme.shape.borderRadius,
-        // backgroundColor: theme.palette.background.paper,
     }));
 
     const toggleFullScreenEditor = () => {
@@ -360,8 +360,9 @@ const InputField: React.FC = () => {
                                 autoFocus={true}
                                 value={input}
                                 onChange={(value) => setInput(value)}
-                                extensions={[json()]}
+                                extensions={[javascript(), json()]}
                                 style={{ paddingTop: '20px' }}
+                                theme={dracula}
                             />
                         </Box>
                     </Modal>
@@ -419,8 +420,9 @@ const InputField: React.FC = () => {
                                 autoFocus={true}
                                 value={context}
                                 onChange={(value) => setContext(value)}
-                                extensions={[json()]}
+                                extensions={[javascript(), json()]}
                                 style={{ paddingTop: '20px' }}
+                                theme={dracula}
                             />
                         </Box>
                     </Modal>
@@ -452,8 +454,9 @@ const InputField: React.FC = () => {
                                 autoFocus={true}
                                 value={examples}
                                 onChange={(value) => setExamples(value)}
-                                extensions={[json()]}
+                                extensions={[javascript(), json()]}
                                 style={{ paddingTop: '20px' }}
+                                theme={dracula}
                             />
                         </Box>
                     </Modal>
@@ -552,6 +555,7 @@ const InputField: React.FC = () => {
                                 value={prompt}
                                 readOnly={true}
                                 extensions={[javascript(), json()]}
+                                theme={dracula}
                             />
                             <Snackbar open={openPromptSnackbar} autoHideDuration={6000} onClose={handleClosePromptSnackbar}>
                                 <Alert onClose={handleClosePromptSnackbar} severity="success" sx={{ width: '100%' }}>
@@ -565,20 +569,30 @@ const InputField: React.FC = () => {
                 </StyledBox>
             </Box>
             <ResultBox>
+                <IconButton onClick={handleCopyClick} sx={{ position: 'absolute', top: '5px', right: '5px', color: '#00684A', zindex: 1 }}>
+                    <FileCopy />
+                </IconButton>
                 {response ? (
-                    <StyledCodeMirror
-                        value={response}
-                        readOnly={false}
-                        extensions={[javascript(), json()]}
-                    />
+                    <div>
+                        <Typography variant="body1" style={{ textAlign: 'center', color: 'grey', paddingTop: '20px', paddingBottom: '20px' }}>
+                            Results
+                        </Typography>
+                        <div style={{ maxHeight: 'calc(100% - 40px)', overflowY: 'auto' }}>
+                            <CodeMirror
+                                value={response}
+                                height="100%"
+                                readOnly={false}
+                                extensions={[javascript(), json()]}
+                                theme={dracula}
+                                style={{ paddingBottom: '20px' }}
+                            />
+                        </div>
+                    </div>
                 ) : (
                     <Typography variant="body1" style={{ textAlign: 'center', color: 'grey', paddingTop: '20px' }}>
                         Response will be displayed here
                     </Typography>
                 )}
-                <IconButton onClick={handleCopyClick} sx={{ position: 'absolute', bottom: '15px', right: '15px', color: 'black', zindex: 1 }}>
-                    <FileCopy />
-                </IconButton>
                 <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleCloseSnackbar}>
                     <Alert onClose={handleCloseSnackbar} severity="success" sx={{ width: '100%' }}>
                         Response copied to clipboard!
