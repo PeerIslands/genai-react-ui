@@ -73,11 +73,10 @@ const InputField: React.FC = () => {
     const [selectedCollection, setSelectedCollection] = useState('');
 
     const handleOpenContextModal = async () => {
-
         try {
             const response = await axios.get('http://localhost:8080/api/v1/collection_list');
-            console.log(response);
-            setCollections(response.data);
+            console.log(response.data);
+            setCollections(response.data.map((item: any) => item.collection));
         } catch (error) {
             console.error('Failed to fetch collections', error);
         }
@@ -93,11 +92,12 @@ const InputField: React.FC = () => {
                 console.log('response is null');
                 return;
             }
-            setContext(context + '\n' + context + ' schema' + '\n' + response.data);
+            setContext(context + '\n' + selectedCollection + ' schema' + '\n' + response.data.schema);
         } catch (error) {
             console.error('Failed to populate collection', error);
         }
     };
+
 
 
     const ResultBox = styled(Box)(({ theme }) => ({
@@ -286,6 +286,7 @@ const InputField: React.FC = () => {
                     {inputMode === "freeform" && (
                         <TextField
                             onClick={isFullScreenEditor ? () => setIsQuestionModalOpen(true) : undefined}
+                            onChange={(e) => setInput(e.target.value)}
                             value={input}
                             placeholder="Question"
                             multiline
@@ -299,6 +300,7 @@ const InputField: React.FC = () => {
                         <>
                             <TextField
                                 onClick={isFullScreenEditor ? () => setIsQuestionModalOpen(true) : undefined}
+                                onChange={(e) => setInput(e.target.value)}
                                 value={input}
                                 placeholder="Question"
                                 multiline
@@ -308,6 +310,7 @@ const InputField: React.FC = () => {
                             />
                             <TextField
                                 onClick={isFullScreenEditor ? () => handleOpenContextModal() : undefined}
+                                onChange={(e) => setContext(e.target.value)}
                                 value={context}
                                 placeholder="Context"
                                 multiline
@@ -318,6 +321,7 @@ const InputField: React.FC = () => {
                             />
                             <TextField
                                 onClick={isFullScreenEditor ? () => setIsExampleModalOpen(true) : undefined}
+                                onChange={(e) => setExamples(e.target.value)}
                                 value={examples}
                                 placeholder="Examples"
                                 multiline
@@ -390,18 +394,23 @@ const InputField: React.FC = () => {
                                     <Select
                                         defaultValue="select collection schema"
                                         labelId="collection-label"
+                                        label="Collection"
                                         value={selectedCollection}
                                         onChange={(e) => setSelectedCollection(e.target.value as string)}
                                     >
-                                        <MenuItem disabled value="select collection schema">
-                                            No schema available
-                                        </MenuItem>
-                                        {collections.map((collection: string) => (
-                                            <MenuItem key={collection} value={collection}>
-                                                {collection}
+                                        {collections.length === 0 ? (
+                                            <MenuItem disabled value="select collection schema">
+                                                No schema available
                                             </MenuItem>
-                                        ))}
+                                        ) : (
+                                            collections.map((collection: string) => (
+                                                <MenuItem key={collection} value={collection}>
+                                                    {collection}
+                                                </MenuItem>
+                                            ))
+                                        )}
                                     </Select>
+
                                 </FormControl>
                                 <Button variant="contained" onClick={populateCollection}>Populate</Button>
                             </Box>
