@@ -14,6 +14,8 @@ import { json } from '@codemirror/lang-json';
 import { js as beautify } from 'js-beautify';
 import { Snackbar, Alert, IconButton } from '@mui/material';
 import FileCopy from '@mui/icons-material/FileCopy';
+import Close from '@mui/icons-material/Close';
+
 
 const StyledBox = styled(Box)(({ theme }) => ({
     padding: theme.spacing(2),
@@ -61,6 +63,11 @@ const InputField: React.FC = () => {
     const [copySuccess, setCopySuccess] = useState(false);
     const [openSnackbar, setOpenSnackbar] = useState(false);
     const [openPromptSnackbar, setOpenPromptSnackbar] = useState(false);
+
+    const [isQuestionModalOpen, setIsQuestionModalOpen] = useState(false);
+    const [isContextModalOpen, setIsContextModalOpen] = useState(false);
+    const [isExampleModalOpen, setIsExampleModalOpen] = useState(false);
+
 
     const ResultBox = styled(Box)(({ theme }) => ({
         position: 'relative',
@@ -243,9 +250,9 @@ const InputField: React.FC = () => {
                 >
                     {inputMode === "freeform" && (
                         <TextField
+                            onClick={() => setIsQuestionModalOpen(true)}
                             value={input}
-                            onChange={(e) => setInput(e.target.value)}
-                            placeholder="Input Natural Language Query"
+                            placeholder="Question"
                             multiline
                             rows={4}
                             variant="outlined"
@@ -256,8 +263,8 @@ const InputField: React.FC = () => {
                     {inputMode === "structured" && (
                         <>
                             <TextField
+                                onClick={() => setIsQuestionModalOpen(true)}
                                 value={input}
-                                onChange={(e) => setInput(e.target.value)}
                                 placeholder="Question"
                                 multiline
                                 rows={4}
@@ -265,8 +272,8 @@ const InputField: React.FC = () => {
                                 fullWidth
                             />
                             <TextField
+                                onClick={() => setIsContextModalOpen(true)}
                                 value={context}
-                                onChange={(e) => setContext(e.target.value)}
                                 placeholder="Context"
                                 multiline
                                 rows={2}
@@ -275,8 +282,8 @@ const InputField: React.FC = () => {
                                 margin="normal"
                             />
                             <TextField
+                                onClick={() => setIsExampleModalOpen(true)}
                                 value={examples}
-                                onChange={(e) => setExamples(e.target.value)}
                                 placeholder="Examples"
                                 multiline
                                 rows={2}
@@ -284,8 +291,105 @@ const InputField: React.FC = () => {
                                 fullWidth
                                 margin="normal"
                             />
+
                         </>
                     )}
+
+                    <Modal
+                        open={isQuestionModalOpen}
+                        onClose={() => setIsQuestionModalOpen(false)}
+                    >
+                        <Box sx={{
+                            position: 'fixed',
+                            top: '50%',
+                            left: '50%',
+                            transform: 'translate(-50%, -50%)',
+                            bgcolor: 'background.paper',
+                            boxShadow: 24,
+                            p: 4,
+                            height: '80vh',
+                            width: '80vw',
+                            overflowY: 'scroll',
+                        }}>
+                            <Typography variant="h6" component="h2" sx={{ position: 'absolute', top: '10px', left: '10px', color: 'gray' }}>
+                                Enter your question
+                            </Typography>
+                            <IconButton onClick={() => setIsQuestionModalOpen(false)} sx={{ position: 'absolute', top: '5px', right: '5px', color: 'black', zIndex: 3 }}>
+                                <Close />
+                            </IconButton>
+                            <CodeMirror
+                                autoFocus={true}
+                                value={input}
+                                onChange={(value) => setInput(value)}
+                                extensions={[json()]}
+                                style={{ paddingTop: '20px' }}
+                            />
+                        </Box>
+                    </Modal>
+
+                    <Modal
+                        open={isContextModalOpen}
+                        onClose={() => setIsContextModalOpen(false)}
+                    >
+                        <Box sx={{
+                            position: 'fixed',
+                            top: '50%',
+                            left: '50%',
+                            transform: 'translate(-50%, -50%)',
+                            bgcolor: 'background.paper',
+                            boxShadow: 24,
+                            p: 4,
+                            height: '80vh',
+                            width: '80vw',
+                            overflowY: 'scroll',
+                        }}>
+                            <Typography variant="h6" component="h2" sx={{ position: 'absolute', top: '10px', left: '10px', color: 'gray' }}>
+                                Enter your context
+                            </Typography>
+                            <IconButton onClick={() => setIsContextModalOpen(false)} sx={{ position: 'absolute', top: '5px', right: '5px', color: 'black', zIndex: 3 }}>
+                                <Close />
+                            </IconButton>
+                            <CodeMirror
+                                autoFocus={true}
+                                value={context}
+                                onChange={(value) => setContext(value)}
+                                extensions={[json()]}
+                                style={{ paddingTop: '20px' }}
+                            />
+                        </Box>
+                    </Modal>
+
+                    <Modal
+                        open={isExampleModalOpen}
+                        onClose={() => setIsExampleModalOpen(false)}
+                    >
+                        <Box sx={{
+                            position: 'fixed',
+                            top: '50%',
+                            left: '50%',
+                            transform: 'translate(-50%, -50%)',
+                            bgcolor: 'background.paper',
+                            boxShadow: 24,
+                            p: 4,
+                            height: '80vh',
+                            width: '80vw',
+                            overflowY: 'scroll',
+                        }}>
+                            <Typography variant="h6" component="h2" sx={{ position: 'absolute', top: '10px', left: '10px', color: 'gray' }}>
+                                Enter your example
+                            </Typography>
+                            <IconButton onClick={() => setIsExampleModalOpen(false)} sx={{ position: 'absolute', top: '5px', right: '5px', color: 'black', zIndex: 3 }}>
+                                <Close />
+                            </IconButton>
+                            <CodeMirror
+                                autoFocus={true}
+                                value={examples}
+                                onChange={(value) => setExamples(value)}
+                                extensions={[json()]}
+                                style={{ paddingTop: '20px' }}
+                            />
+                        </Box>
+                    </Modal>
 
                     {loading ? (
                         <Button disabled variant="contained" onClick={handleButtonClick} sx={{ marginTop: '20px' }} >Ask</Button>
