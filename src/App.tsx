@@ -30,7 +30,7 @@ function App() {
   const [response, setResponse] = useState('');
   const [context, setContext] = useState('');
   const [examples, setExamples] = useState('');
-  const [temperature, setTemperature] = useState(0.5);
+  const [temperature, setTemperature] = useState(0.3);
   const [history, setHistory] = useState<string[]>([]);
 
   const addQuery = (query: string) => {
