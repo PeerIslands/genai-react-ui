@@ -616,7 +616,7 @@ const InputField: React.FC = () => {
                         justifyContent: 'center',
                         paddingTop: '10px',
                         paddingBottom: '10px',
-                        marginTop: '50px',
+                        marginTop: '0px',
                         backgroundColor: '#fff'
                     }}
                 >
