@@ -32,6 +32,8 @@ function App() {
   const [examples, setExamples] = useState('');
   const [temperature, setTemperature] = useState(0.3);
   const [history, setHistory] = useState<string[]>([]);
+  const [validSyntax, setValidSyntax] = useState(false);
+  const [validSemantics, setValidSemantics] = useState(false);
 
   const addQuery = (query: string) => {
     setHistory(prevHistory => [...prevHistory, query]);
@@ -59,7 +61,11 @@ function App() {
               examples,
               setExamples,
               temperature,
-              setTemperature
+              setTemperature,
+              validSyntax,
+              setValidSyntax,
+              validSemantics,
+              setValidSemantics
             }}>
               <InputField />
               <NavigationDrawer />

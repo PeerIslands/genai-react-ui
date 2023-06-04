@@ -15,6 +15,9 @@ import { js as beautify } from 'js-beautify';
 import { Snackbar, Alert, IconButton } from '@mui/material';
 import FileCopy from '@mui/icons-material/FileCopy';
 import Close from '@mui/icons-material/Close';
+import CheckCircle from '@mui/icons-material/CheckCircle';
+import Cancel from '@mui/icons-material/Cancel';
+
 
 //THEMES
 import { dracula, draculaInit } from '@uiw/codemirror-theme-dracula';
@@ -48,11 +51,15 @@ const StyledCircularProgress = styled(CircularProgress)(({ theme }) => ({
 
 
 const InputField: React.FC = () => {
+
+    // Getting history from InputContext
     const { context, setContext } = useContext(InputContext);
     const { examples, setExamples } = useContext(InputContext);
-
     const { response, setResponse } = useContext(InputContext);
     const { prompt, setPrompt } = useContext(InputContext);
+    const { input, setInput } = useContext(InputContext);
+    const { validSyntax, setValidSyntax } = useContext(InputContext);
+    const { validSemantics, setValidSemantics } = useContext(InputContext);
 
     const { temperature, setTemperature } = useContext(InputContext);
     const [maxOutputTokens, setMaxOutputTokens] = useState(512);
@@ -60,7 +67,7 @@ const InputField: React.FC = () => {
     const [loading, setLoading] = useState(false);
     const [inputMode, setInputMode] = useState('freeform');
     const { addQuery } = useContext(QueryContext);
-    const { input, setInput } = useContext(InputContext);
+
     const [open, setOpen] = useState(false);
     const [copySuccess, setCopySuccess] = useState(false);
     const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -197,6 +204,8 @@ const InputField: React.FC = () => {
             if (response && response.data) {
                 setResponse(response.data.code);
                 setPrompt(response.data.prompt);
+                setValidSyntax(response.data.validSyntax);
+                setValidSemantics(response.data.validSemantics);
             }
         } catch (error) {
             console.error('Error making request:', error);
@@ -584,6 +593,23 @@ const InputField: React.FC = () => {
                                 <Typography variant="body1" style={{ textAlign: 'center', color: 'grey', paddingTop: '20px', paddingBottom: '20px' }}>
                                     Results
                                 </Typography>
+                                {response && (
+                                    <Box display="flex" justifyContent="space-between" alignItems="center" padding="10px">
+                                        <Box display="flex" alignItems="center">
+                                            {validSyntax ? <CheckCircle style={{ color: "green" }} /> : <Cancel style={{ color: "red" }} />}
+                                            <Typography variant="body1" style={{ marginLeft: "10px" }}>
+                                                Syntax Validated
+                                            </Typography>
+                                        </Box>
+                                        <Box display="flex" alignItems="center">
+                                            {validSemantics ? <CheckCircle style={{ color: "green" }} /> : <Cancel style={{ color: "red" }} />}
+                                            <Typography variant="body1" style={{ marginLeft: "10px" }}>
+                                                Semantics Validated
+                                            </Typography>
+                                        </Box>
+                                    </Box>
+                                )}
+
                                 <div style={{ maxHeight: 'calc(100% - 40px)', overflowY: 'auto' }}>
                                     <CodeMirror
                                         value={response}

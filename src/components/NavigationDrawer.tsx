@@ -16,7 +16,7 @@ const NavigationDrawer: React.FC = () => {
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [historyItems, setHistoryItems] = useState([]);
     const [selectedItem, setSelectedItem] = useState(null);
-    const { setInput, setPrompt, setResponse, setContext, setExamples, setTemperature } = useContext(InputContext);
+    const { setInput, setPrompt, setResponse, setContext, setExamples, setTemperature, setValidSyntax, setValidSemantics } = useContext(InputContext);
 
     const toggleDrawer = (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
         setDrawerOpen(open);
@@ -42,6 +42,8 @@ const NavigationDrawer: React.FC = () => {
         setContext(item.context);
         setExamples(item.examples);
         setTemperature(item.temperature);
+        setValidSyntax(item.validSyntax);
+        setValidSemantics(item.validSemantics);
     };
 
     const list = () => (

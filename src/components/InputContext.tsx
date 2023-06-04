@@ -13,6 +13,10 @@ interface IInputContext {
     setExamples: (examples: string) => void;
     temperature: number;
     setTemperature: (temperature: number) => void;
+    validSyntax: boolean;
+    setValidSyntax: (validSyntax: boolean) => void;
+    validSemantics: boolean;
+    setValidSemantics: (validSemantics: boolean) => void;
 }
 
 export const InputContext = React.createContext<IInputContext>({
@@ -28,4 +32,8 @@ export const InputContext = React.createContext<IInputContext>({
     setExamples: () => { },
     temperature: 0.3,
     setTemperature: () => { },
+    validSyntax: false,
+    setValidSyntax: () => { },
+    validSemantics: false,
+    setValidSemantics: () => { }
 });
