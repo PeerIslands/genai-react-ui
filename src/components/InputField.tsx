@@ -594,8 +594,8 @@ const InputField: React.FC = () => {
                                     Results
                                 </Typography>
                                 {response && (
-                                    <Box display="flex" justifyContent="space-between" alignItems="center" padding="10px">
-                                        <Box display="flex" alignItems="center">
+                                    <Box display="flex" alignItems="center" padding="10px">
+                                        <Box display="flex" alignItems="center" marginRight="30px">
                                             {validSyntax ? <CheckCircle style={{ color: "green" }} /> : <Cancel style={{ color: "red" }} />}
                                             <Typography variant="body1" style={{ marginLeft: "10px" }}>
                                                 Syntax Validated
@@ -609,6 +609,8 @@ const InputField: React.FC = () => {
                                         </Box>
                                     </Box>
                                 )}
+
+
 
                                 <div style={{ maxHeight: 'calc(100% - 40px)', overflowY: 'auto' }}>
                                     <CodeMirror
