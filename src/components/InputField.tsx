@@ -21,6 +21,7 @@ import Cancel from '@mui/icons-material/Cancel';
 
 //THEMES
 import { dracula, draculaInit } from '@uiw/codemirror-theme-dracula';
+import CodeMirrorCustom from "./CodeMirrorCustom";
 
 const StyledBox = styled(Box)(({ theme }) => ({
     padding: theme.spacing(2),
@@ -299,7 +300,7 @@ const InputField: React.FC = () => {
                             value={input}
                             placeholder="Question"
                             multiline
-                            rows={4}
+                            rows={13}
                             variant="outlined"
                             fullWidth
                         />
@@ -532,7 +533,7 @@ const InputField: React.FC = () => {
                         label="Full screen editor"
                     />
 
-                    <Button variant="contained" onClick={handleOpen} sx={{ marginTop: '20px' }}>Show Prompt</Button>
+                    <Button variant="contained" onClick={handleOpen} sx={{ marginTop: '80px' }}>Show Prompt</Button>
 
 
                     <Modal
@@ -609,18 +610,11 @@ const InputField: React.FC = () => {
                                         </Box>
                                     </Box>
                                 )}
-
-
-
                                 <div style={{ maxHeight: 'calc(100% - 40px)', overflowY: 'auto' }}>
-                                    <CodeMirror
-                                        value={response}
-                                        height="100%"
-                                        readOnly={false}
-                                        extensions={[javascript(), json()]}
-                                        theme={dracula}
-                                        style={{ paddingBottom: '20px' }}
-                                    />
+                                    <div style={{ maxHeight: 'calc(100% - 40px)', overflowY: 'auto' }}>
+                                        <CodeMirrorCustom response={response} />
+                                    </div>
+
                                 </div>
                             </div>
                         ) : (
