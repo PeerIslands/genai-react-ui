@@ -97,11 +97,20 @@ const InputField: React.FC = () => {
     const loadCollections = async () => {
         try {
             const response = await axios.get('http://localhost:8080/api/v1/collection_list');
-            setCollections(response.data.map((item: any) => item.collection));
+            // check if response is null
+            if (response.data == null) {
+                console.log('response is null');
+                return;
+            }
+            console.log(response)
+            // Remove the leading and trailing square brackets and split by comma
+            let collections = response.data.slice(1, -1).split(', ');
+            setCollections(collections);
         } catch (error) {
             console.error('Failed to fetch collections', error);
         }
     };
+
 
     const populateCollection = async () => {
         try {
@@ -429,13 +438,14 @@ const InputField: React.FC = () => {
                                                 No schema available
                                             </MenuItem>
                                         ) : (
-                                            collections.map((collection: string) => (
-                                                <MenuItem key={collection} value={collection}>
+                                            collections.map((collection: string, index: number) => (
+                                                <MenuItem key={index} value={collection}>
                                                     {collection}
                                                 </MenuItem>
                                             ))
                                         )}
                                     </Select>
+
 
                                 </FormControl>
                                 <Button variant="contained" onClick={populateCollection}>Populate</Button>
@@ -549,39 +559,31 @@ const InputField: React.FC = () => {
                         />
                     </Box>
 
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            flexDirection: 'row',
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                        }}
-                    >
-                        <FormControl sx={{ width: '85%' }}>
-                            <InputLabel id="collection-label">Collection</InputLabel>
-                            <Select
-                                labelId="collection-label"
-                                label="Collection"
-                                value={selectedCollection}
-                                onChange={(e) => setSelectedCollection(e.target.value as string)}
-                                fullWidth
-                            >
-                                {collections.length > 0 ?
-                                    collections.map((collection) => (
-                                        <MenuItem key={collection} value={collection}>
-                                            {collection}
-                                        </MenuItem>
-                                    )) :
-                                    <MenuItem value={""}>
-                                        {"No collections available"}
+                    <FormControl sx={{ width: '100%' }}>
+                        {/* <InputLabel id="collection-label">Collections</InputLabel> */}
+                        <Select
+                            // labelId="collection-label"
+                            // label="Collections"
+                            displayEmpty={true}
+                            renderValue={(value) => value === "" ? "Your collections" : value}
+                            value={selectedCollection}
+                            onChange={(e) => setSelectedCollection(e.target.value as string)}
+                            fullWidth
+                            inputProps={{ shrink: true }}
+                            style={{ marginTop: '8px' }}
+                        >
+                            {collections.length > 0 ?
+                                collections.map((collection) => (
+                                    <MenuItem key={collection} value={collection}>
+                                        {collection}
                                     </MenuItem>
-                                }
-                            </Select>
-                        </FormControl>
-                        <IconButton onClick={loadCollections} sx={{ marginLeft: '1em' }}>
-                            <Refresh />
-                        </IconButton>
-                    </Box>
+                                )) :
+                                <MenuItem value={""}>
+                                    {"No collections available"}
+                                </MenuItem>
+                            }
+                        </Select>
+                    </FormControl>
 
                     <FormControlLabel
                         control={
@@ -593,8 +595,7 @@ const InputField: React.FC = () => {
                         label="Full screen editor"
                     />
 
-                    <Button variant="contained" onClick={handleOpen} sx={{ marginTop: '80px' }}>Show Prompt</Button>
-
+                    <Button variant="contained" onClick={handleOpen} sx={{ marginTop: '75px' }}>Show Prompt</Button>
 
                     <Modal
                         open={open}
@@ -619,7 +620,6 @@ const InputField: React.FC = () => {
                                 Prompt
                             </Typography>
                             <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                                {/* <Button variant="contained" onClick={() => navigator.clipboard.writeText(prompt)} sx={{ marginBottom: '20px' }}>Copy Prompt</Button> */}
                                 <IconButton onClick={handlePromptCopyClick} sx={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '20px', color: 'black' }}>
                                     <FileCopy />
                                 </IconButton>
@@ -639,7 +639,6 @@ const InputField: React.FC = () => {
                             </Snackbar>
                         </Box>
                     </Modal>
-
 
                 </StyledBox>
             </Box>
