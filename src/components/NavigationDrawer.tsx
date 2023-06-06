@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Drawer, IconButton, Box, Typography, Button, Divider } from '@mui/material';
+import { Drawer, IconButton, Box, Typography, Button, Divider, Menu, MenuItem } from '@mui/material';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
@@ -11,12 +11,14 @@ import axios from 'axios';
 import ProfilePic from '../images/avatar.png';
 import BookIcon from '@mui/icons-material/Book';
 import RefreshIcon from '@mui/icons-material/Refresh';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
 const NavigationDrawer: React.FC = () => {
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [historyItems, setHistoryItems] = useState([]);
     const [selectedItem, setSelectedItem] = useState(null);
     const { setInput, setPrompt, setResponse, setContext, setExamples, setTemperature, setValidSyntax, setValidSemantics } = useContext(InputContext);
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
     const toggleDrawer = (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
         setDrawerOpen(open);
@@ -27,6 +29,15 @@ const NavigationDrawer: React.FC = () => {
         console.log(response.data);
         setHistoryItems(response.data);
     }
+
+    const handleButtonClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+        event.stopPropagation();
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleMenuClose = () => {
+        setAnchorEl(null);
+    };
 
     useEffect(() => {
         if (drawerOpen) {
@@ -82,12 +93,38 @@ const NavigationDrawer: React.FC = () => {
     return (
         <>
             <Button
-                onClick={toggleDrawer(true)} style={{ position: 'fixed', right: '20px', top: '20px' }}>
+                onClick={toggleDrawer(true)} style={{ position: 'fixed', left: '20px', top: '20px' }}>
                 <BookIcon sx={{ color: "#00684A", border: "1.5px solid white" }} />
                 <Typography variant="body2" style={{ paddingLeft: '10px', paddingRight: '10px', paddingTop: '2px', color: 'black' }}>History</Typography>
             </Button>
-            <Avatar src={ProfilePic} alt="Profile" style={{ border: "1.5px solid white", position: 'fixed', left: '25px', top: '15px' }} />
-            <Drawer anchor='right' open={drawerOpen} onClose={toggleDrawer(false)}>
+            <Button
+                onClick={handleButtonClick}
+                style={{ position: 'fixed', right: '25px', top: '15px', textTransform: 'none' }}
+                variant="outlined"
+                sx={{
+                    borderRadius: '25px',
+                    borderColor: 'primary.main',
+                    '&:hover': {
+                        borderColor: 'primary.dark',
+                    }
+                }}
+            >
+                <Box component="span" sx={{ pr: 1 }}>John Doe</Box>
+                <ArrowDropDownIcon />
+            </Button>
+            <Menu
+                id="user-menu"
+                anchorEl={anchorEl}
+                keepMounted
+                open={Boolean(anchorEl)}
+                onClose={handleMenuClose}
+            >
+                <MenuItem onClick={handleMenuClose}>Atlas</MenuItem>
+                <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+                <MenuItem onClick={handleMenuClose}>Settings</MenuItem>
+                <MenuItem onClick={handleMenuClose}>Logout</MenuItem>
+            </Menu>
+            <Drawer anchor='left' open={drawerOpen} onClose={toggleDrawer(false)}>
                 {list()}
             </Drawer>
         </>

@@ -153,6 +153,12 @@ const InputField: React.FC = () => {
     };
 
     const handleModeChange = (event: React.MouseEvent<HTMLElement>, mode: string) => {
+        if (mode == 'structured') {
+            setIsAutoDetect(false);
+        }
+        else {
+            setIsAutoDetect(true);
+        }
         setInputMode(mode);
     };
 
@@ -386,37 +392,7 @@ const InputField: React.FC = () => {
                         <>
                             <TextField
                                 onClick={isFullScreenEditor ? () => setIsQuestionModalOpen(true) : undefined}
-                                onChange={(e) => {
-                                    setInput(e.target.value);
-                                    if (isAutoDetect) {
-                                        const words = e.target.value.split(/\s+/).filter(word => word.length > 0);
-                                        let foundCollection = "Your collections";
-                                        for (let i = 0; i < words.length; i++) {
-                                            const wordMatch = collections.find(collection => (collection as string).toLowerCase().endsWith(words[i].toLowerCase()));
-                                            if (wordMatch) {
-                                                foundCollection = wordMatch as string;
-                                                break;
-                                            }
-                                        }
-                                        setIsAccessCollection(foundCollection == "Your collections" ? false : true);
-                                        setSelectedCollection(foundCollection);
-                                    }
-                                }}
-                                onBlur={(e) => {
-                                    if (isAutoDetect) {
-                                        const words = e.target.value.split(/\s+/).filter(word => word.length > 0);
-                                        let foundCollection = "Your collections";
-                                        for (let i = 0; i < words.length; i++) {
-                                            const wordMatch = collections.find(collection => (collection as string).toLowerCase().endsWith(words[i].toLowerCase()));
-                                            if (wordMatch) {
-                                                foundCollection = wordMatch as string;
-                                                break;
-                                            }
-                                        }
-                                        setIsAccessCollection(foundCollection == "Your collections" ? false : true);
-                                        setSelectedCollection(foundCollection);
-                                    }
-                                }}
+                                onChange={(e) => { setInput(e.target.value) }}
                                 value={input}
                                 placeholder="Question"
                                 multiline
