@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Box, TextField, FormControl, InputLabel, Select, MenuItem, Button, ToggleButtonGroup, ToggleButton, Divider, Typography, CircularProgress, Switch, FormControlLabel } from '@mui/material';
 import axios from 'axios';
 import { styled } from '@mui/system';
@@ -22,6 +22,7 @@ import Cancel from '@mui/icons-material/Cancel';
 //THEMES
 import { dracula, draculaInit } from '@uiw/codemirror-theme-dracula';
 import CodeMirrorCustom from "./CodeMirrorCustom";
+import Refresh from "@mui/icons-material/Refresh";
 
 const StyledBox = styled(Box)(({ theme }) => ({
     padding: theme.spacing(2),
@@ -91,6 +92,15 @@ const InputField: React.FC = () => {
             console.error('Failed to fetch collections', error);
         }
         setIsContextModalOpen(true);
+    };
+
+    const loadCollections = async () => {
+        try {
+            const response = await axios.get('http://localhost:8080/api/v1/collection_list');
+            setCollections(response.data.map((item: any) => item.collection));
+        } catch (error) {
+            console.error('Failed to fetch collections', error);
+        }
     };
 
     const populateCollection = async () => {
@@ -236,6 +246,10 @@ const InputField: React.FC = () => {
         color: '#179C52',
     });
 
+    useEffect(() => {
+        loadCollections();
+    }, []);
+
 
     return (
         <Box
@@ -300,7 +314,7 @@ const InputField: React.FC = () => {
                             value={input}
                             placeholder="Question"
                             multiline
-                            rows={13}
+                            rows={12}
                             variant="outlined"
                             fullWidth
                         />
@@ -314,7 +328,7 @@ const InputField: React.FC = () => {
                                 value={input}
                                 placeholder="Question"
                                 multiline
-                                rows={4}
+                                rows={3}
                                 variant="outlined"
                                 fullWidth
                             />
@@ -477,7 +491,7 @@ const InputField: React.FC = () => {
                     {loading ? (
                         <Button disabled variant="contained" onClick={handleButtonClick} sx={{ marginTop: '20px' }} >Ask</Button>
                     ) : (
-                        <Button variant="contained" onClick={handleButtonClick} sx={{ marginTop: '20px' }} >Ask</Button>
+                        <Button variant="contained" onClick={handleButtonClick} sx={{ marginTop: '20px' }} >{loading ? 'Asking...' : 'Ask'}</Button>
                     )}
                 </Box>
                 <StyledBox
@@ -533,6 +547,40 @@ const InputField: React.FC = () => {
                             margin="normal"
                             sx={{ width: '48%' }}
                         />
+                    </Box>
+
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                        }}
+                    >
+                        <FormControl sx={{ width: '85%' }}>
+                            <InputLabel id="collection-label">Collection</InputLabel>
+                            <Select
+                                labelId="collection-label"
+                                label="Collection"
+                                value={selectedCollection}
+                                onChange={(e) => setSelectedCollection(e.target.value as string)}
+                                fullWidth
+                            >
+                                {collections.length > 0 ?
+                                    collections.map((collection) => (
+                                        <MenuItem key={collection} value={collection}>
+                                            {collection}
+                                        </MenuItem>
+                                    )) :
+                                    <MenuItem value={""}>
+                                        {"No collections available"}
+                                    </MenuItem>
+                                }
+                            </Select>
+                        </FormControl>
+                        <IconButton onClick={loadCollections} sx={{ marginLeft: '1em' }}>
+                            <Refresh />
+                        </IconButton>
                     </Box>
 
                     <FormControlLabel
