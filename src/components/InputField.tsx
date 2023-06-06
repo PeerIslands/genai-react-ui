@@ -501,27 +501,39 @@ const InputField: React.FC = () => {
                         </Select>
                     </FormControl>
 
-                    <TextField
-                        id="temperature-label"
-                        label="Temperature"
-                        type="number"
-                        value={temperature}
-                        onChange={(e) => setTemperature(parseFloat(e.target.value))}
-                        variant="outlined"
-                        margin="normal"
-                        fullWidth
-                    />
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                        }}
+                    >
+                        <TextField
+                            id="temperature-label"
+                            label="Temperature"
+                            type="number"
+                            value={temperature}
+                            InputProps={{
+                                readOnly: true
+                            }}
+                            variant="outlined"
+                            margin="normal"
+                            sx={{ width: '48%' }}
+                        />
 
-                    <TextField
-                        id="max-tokens-label"
-                        label="Max Tokens"
-                        type="number"
-                        value={maxOutputTokens}
-                        onChange={(e) => setMaxOutputTokens(parseInt(e.target.value))}
-                        variant="outlined"
-                        margin="normal"
-                        fullWidth
-                    />
+                        <TextField
+                            id="max-tokens-label"
+                            label="Max Tokens"
+                            type="number"
+                            value={maxOutputTokens}
+                            InputProps={{
+                                readOnly: true
+                            }}
+                            variant="outlined"
+                            margin="normal"
+                            sx={{ width: '48%' }}
+                        />
+                    </Box>
 
                     <FormControlLabel
                         control={

@@ -30,7 +30,7 @@ export const InputContext = React.createContext<IInputContext>({
     setContext: () => { },
     examples: '',
     setExamples: () => { },
-    temperature: 0.3,
+    temperature: 0.1,
     setTemperature: () => { },
     validSyntax: false,
     setValidSyntax: () => { },

@@ -30,7 +30,7 @@ function App() {
   const [response, setResponse] = useState('');
   const [context, setContext] = useState('');
   const [examples, setExamples] = useState('');
-  const [temperature, setTemperature] = useState(0.3);
+  const [temperature, setTemperature] = useState(0.1);
   const [history, setHistory] = useState<string[]>([]);
   const [validSyntax, setValidSyntax] = useState(false);
   const [validSemantics, setValidSemantics] = useState(false);
