@@ -319,7 +319,31 @@ const InputField: React.FC = () => {
                     {inputMode === "freeform" && (
                         <TextField
                             onClick={isFullScreenEditor ? () => setIsQuestionModalOpen(true) : undefined}
-                            onChange={(e) => setInput(e.target.value)}
+                            onChange={(e) => {
+                                setInput(e.target.value);
+                                const words = e.target.value.split(/\s+/).filter(word => word.length > 0);
+                                let foundCollection = "Your collections";
+                                for (let i = 0; i < words.length; i++) {
+                                    const wordMatch = collections.find(collection => (collection as string).toLowerCase().endsWith(words[i].toLowerCase()));
+                                    if (wordMatch) {
+                                        foundCollection = wordMatch as string;
+                                        break;
+                                    }
+                                }
+                                setSelectedCollection(foundCollection);
+                            }}
+                            onBlur={(e) => {
+                                const words = e.target.value.split(/\s+/).filter(word => word.length > 0);
+                                let foundCollection = "Your collections";
+                                for (let i = 0; i < words.length; i++) {
+                                    const wordMatch = collections.find(collection => (collection as string).toLowerCase().endsWith(words[i].toLowerCase()));
+                                    if (wordMatch) {
+                                        foundCollection = wordMatch as string;
+                                        break;
+                                    }
+                                }
+                                setSelectedCollection(foundCollection);
+                            }}
                             value={input}
                             placeholder="Question"
                             multiline
@@ -333,7 +357,31 @@ const InputField: React.FC = () => {
                         <>
                             <TextField
                                 onClick={isFullScreenEditor ? () => setIsQuestionModalOpen(true) : undefined}
-                                onChange={(e) => setInput(e.target.value)}
+                                onChange={(e) => {
+                                    setInput(e.target.value);
+                                    const words = e.target.value.split(/\s+/).filter(word => word.length > 0);
+                                    let foundCollection = "Your collections";
+                                    for (let i = 0; i < words.length; i++) {
+                                        const wordMatch = collections.find(collection => (collection as string).toLowerCase().endsWith(words[i].toLowerCase()));
+                                        if (wordMatch) {
+                                            foundCollection = wordMatch as string;
+                                            break;
+                                        }
+                                    }
+                                    setSelectedCollection(foundCollection);
+                                }}
+                                onBlur={(e) => {
+                                    const words = e.target.value.split(/\s+/).filter(word => word.length > 0);
+                                    let foundCollection = "Your collections";
+                                    for (let i = 0; i < words.length; i++) {
+                                        const wordMatch = collections.find(collection => (collection as string).toLowerCase().endsWith(words[i].toLowerCase()));
+                                        if (wordMatch) {
+                                            foundCollection = wordMatch as string;
+                                            break;
+                                        }
+                                    }
+                                    setSelectedCollection(foundCollection);
+                                }}
                                 value={input}
                                 placeholder="Question"
                                 multiline
