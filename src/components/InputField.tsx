@@ -79,6 +79,7 @@ const InputField: React.FC = () => {
     const [isContextModalOpen, setIsContextModalOpen] = useState(false);
     const [isExampleModalOpen, setIsExampleModalOpen] = useState(false);
     const [isFullScreenEditor, setIsFullScreenEditor] = useState(false);
+    const [isAutoDetect, setIsAutoDetect] = useState(true);
 
     const [collections, setCollections] = useState([]);
     const [selectedCollection, setSelectedCollection] = useState('');
@@ -144,6 +145,10 @@ const InputField: React.FC = () => {
 
     const toggleFullScreenEditor = () => {
         setIsFullScreenEditor(!isFullScreenEditor);
+    };
+
+    const toggleAutoDetect = () => {
+        setIsAutoDetect(!isAutoDetect);
     };
 
     const handleModeChange = (event: React.MouseEvent<HTMLElement>, mode: string) => {
@@ -321,28 +326,32 @@ const InputField: React.FC = () => {
                             onClick={isFullScreenEditor ? () => setIsQuestionModalOpen(true) : undefined}
                             onChange={(e) => {
                                 setInput(e.target.value);
-                                const words = e.target.value.split(/\s+/).filter(word => word.length > 0);
-                                let foundCollection = "Your collections";
-                                for (let i = 0; i < words.length; i++) {
-                                    const wordMatch = collections.find(collection => (collection as string).toLowerCase().endsWith(words[i].toLowerCase()));
-                                    if (wordMatch) {
-                                        foundCollection = wordMatch as string;
-                                        break;
+                                if (isAutoDetect) {
+                                    const words = e.target.value.split(/\s+/).filter(word => word.length > 0);
+                                    let foundCollection = "Your collections";
+                                    for (let i = 0; i < words.length; i++) {
+                                        const wordMatch = collections.find(collection => (collection as string).toLowerCase().endsWith(words[i].toLowerCase()));
+                                        if (wordMatch) {
+                                            foundCollection = wordMatch as string;
+                                            break;
+                                        }
                                     }
+                                    setSelectedCollection(foundCollection);
                                 }
-                                setSelectedCollection(foundCollection);
                             }}
                             onBlur={(e) => {
-                                const words = e.target.value.split(/\s+/).filter(word => word.length > 0);
-                                let foundCollection = "Your collections";
-                                for (let i = 0; i < words.length; i++) {
-                                    const wordMatch = collections.find(collection => (collection as string).toLowerCase().endsWith(words[i].toLowerCase()));
-                                    if (wordMatch) {
-                                        foundCollection = wordMatch as string;
-                                        break;
+                                if (isAutoDetect) {
+                                    const words = e.target.value.split(/\s+/).filter(word => word.length > 0);
+                                    let foundCollection = "Your collections";
+                                    for (let i = 0; i < words.length; i++) {
+                                        const wordMatch = collections.find(collection => (collection as string).toLowerCase().endsWith(words[i].toLowerCase()));
+                                        if (wordMatch) {
+                                            foundCollection = wordMatch as string;
+                                            break;
+                                        }
                                     }
+                                    setSelectedCollection(foundCollection);
                                 }
-                                setSelectedCollection(foundCollection);
                             }}
                             value={input}
                             placeholder="Question"
@@ -359,28 +368,32 @@ const InputField: React.FC = () => {
                                 onClick={isFullScreenEditor ? () => setIsQuestionModalOpen(true) : undefined}
                                 onChange={(e) => {
                                     setInput(e.target.value);
-                                    const words = e.target.value.split(/\s+/).filter(word => word.length > 0);
-                                    let foundCollection = "Your collections";
-                                    for (let i = 0; i < words.length; i++) {
-                                        const wordMatch = collections.find(collection => (collection as string).toLowerCase().endsWith(words[i].toLowerCase()));
-                                        if (wordMatch) {
-                                            foundCollection = wordMatch as string;
-                                            break;
+                                    if (isAutoDetect) {
+                                        const words = e.target.value.split(/\s+/).filter(word => word.length > 0);
+                                        let foundCollection = "Your collections";
+                                        for (let i = 0; i < words.length; i++) {
+                                            const wordMatch = collections.find(collection => (collection as string).toLowerCase().endsWith(words[i].toLowerCase()));
+                                            if (wordMatch) {
+                                                foundCollection = wordMatch as string;
+                                                break;
+                                            }
                                         }
+                                        setSelectedCollection(foundCollection);
                                     }
-                                    setSelectedCollection(foundCollection);
                                 }}
                                 onBlur={(e) => {
-                                    const words = e.target.value.split(/\s+/).filter(word => word.length > 0);
-                                    let foundCollection = "Your collections";
-                                    for (let i = 0; i < words.length; i++) {
-                                        const wordMatch = collections.find(collection => (collection as string).toLowerCase().endsWith(words[i].toLowerCase()));
-                                        if (wordMatch) {
-                                            foundCollection = wordMatch as string;
-                                            break;
+                                    if (isAutoDetect) {
+                                        const words = e.target.value.split(/\s+/).filter(word => word.length > 0);
+                                        let foundCollection = "Your collections";
+                                        for (let i = 0; i < words.length; i++) {
+                                            const wordMatch = collections.find(collection => (collection as string).toLowerCase().endsWith(words[i].toLowerCase()));
+                                            if (wordMatch) {
+                                                foundCollection = wordMatch as string;
+                                                break;
+                                            }
                                         }
+                                        setSelectedCollection(foundCollection);
                                     }
-                                    setSelectedCollection(foundCollection);
                                 }}
                                 value={input}
                                 placeholder="Question"
@@ -642,8 +655,17 @@ const InputField: React.FC = () => {
                         }
                         label="Full screen editor"
                     />
+                    <FormControlLabel
+                        control={
+                            <Switch
+                                checked={isAutoDetect}
+                                onChange={toggleAutoDetect}
+                            />
+                        }
+                        label="Auto detect Collection"
+                    />
 
-                    <Button variant="contained" onClick={handleOpen} sx={{ marginTop: '75px' }}>Show Prompt</Button>
+                    <Button variant="contained" onClick={handleOpen} sx={{ marginTop: '37px' }}>Show Prompt</Button>
 
                     <Modal
                         open={open}
