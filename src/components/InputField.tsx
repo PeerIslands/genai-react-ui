@@ -178,7 +178,7 @@ const InputField: React.FC = () => {
         addQuery(input);
 
         try {
-            const response = await axios.post('http://localhost:8080/api/v1/predict',
+            const response = await axios.post('http://0.0.0.0:8080/api/v1/predict',
                 {
                     instances: [
                         {
