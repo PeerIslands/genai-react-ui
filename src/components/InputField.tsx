@@ -83,6 +83,9 @@ const InputField: React.FC = () => {
 
     const [collections, setCollections] = useState([]);
     const [selectedCollection, setSelectedCollection] = useState('');
+    const [isAccessCollection, setIsAccessCollection] = useState(false);
+    const [openAccessModal, setOpenAccessModal] = useState(false);
+
 
     const handleOpenContextModal = async () => {
         try {
@@ -98,13 +101,11 @@ const InputField: React.FC = () => {
     const loadCollections = async () => {
         try {
             const response = await axios.get('http://localhost:8080/api/v1/collection_list');
-            // check if response is null
             if (response.data == null) {
                 console.log('response is null');
                 return;
             }
             console.log(response)
-            // Remove the leading and trailing square brackets and split by comma
             let collections = response.data.slice(1, -1).split(', ');
             setCollections(collections);
         } catch (error) {
@@ -196,7 +197,7 @@ const InputField: React.FC = () => {
         setOpenPromptSnackbar(false);
     };
 
-    const handleButtonClick = async () => {
+    const executeQuery = async () => {
         setLoading(true);
         setResponse("");
         addQuery(input);
@@ -237,6 +238,23 @@ const InputField: React.FC = () => {
         } finally {
             setLoading(false);
         }
+    };
+
+    const handleButtonClick = () => {
+        if (!isAccessCollection && isAutoDetect) {
+            setOpenAccessModal(true);
+        } else {
+            executeQuery();
+        }
+    };
+
+    const handleModalClose = () => {
+        setOpenAccessModal(false);
+    };
+
+    const handleModalProceed = () => {
+        setOpenAccessModal(false);
+        executeQuery();
     };
 
 
@@ -336,6 +354,7 @@ const InputField: React.FC = () => {
                                             break;
                                         }
                                     }
+                                    setIsAccessCollection(foundCollection == "Your collections" ? false : true);
                                     setSelectedCollection(foundCollection);
                                 }
                             }}
@@ -350,6 +369,7 @@ const InputField: React.FC = () => {
                                             break;
                                         }
                                     }
+                                    setIsAccessCollection(foundCollection == "Your collections" ? false : true);
                                     setSelectedCollection(foundCollection);
                                 }
                             }}
@@ -378,6 +398,7 @@ const InputField: React.FC = () => {
                                                 break;
                                             }
                                         }
+                                        setIsAccessCollection(foundCollection == "Your collections" ? false : true);
                                         setSelectedCollection(foundCollection);
                                     }
                                 }}
@@ -392,6 +413,7 @@ const InputField: React.FC = () => {
                                                 break;
                                             }
                                         }
+                                        setIsAccessCollection(foundCollection == "Your collections" ? false : true);
                                         setSelectedCollection(foundCollection);
                                     }
                                 }}
@@ -564,6 +586,45 @@ const InputField: React.FC = () => {
                     ) : (
                         <Button variant="contained" onClick={handleButtonClick} sx={{ marginTop: '20px' }} >{loading ? 'Asking...' : 'Ask'}</Button>
                     )}
+
+                    <Modal
+                        open={openAccessModal}
+                        onClose={handleModalClose}
+                        aria-labelledby="access-modal-title"
+                        aria-describedby="access-modal-description"
+                    >
+                        <Box
+                            sx={{
+                                position: 'fixed',
+                                top: '50%',
+                                left: '50%',
+                                transform: 'translate(-50%, -50%)',
+                                bgcolor: 'background.paper',
+                                boxShadow: 24,
+                                p: 4,
+                                display: 'flex',
+                                flexDirection: 'column',
+                            }}
+                        >
+                            <Typography id="access-modal-title" variant="h6" component="h2">
+                                Warning!
+                            </Typography>
+                            <Typography id="access-modal-description" sx={{ mt: 2 }}>
+                                The question is on a collection that you don't have access to. Do you want to proceed?
+                            </Typography>
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    justifyContent: 'space-between',
+                                    mt: 2,
+                                }}
+                            >
+                                <Button onClick={handleModalProceed}>Yes</Button>
+                                <Button onClick={handleModalClose}>Cancel</Button>
+                            </Box>
+                        </Box>
+                    </Modal>
+
                 </Box>
                 <StyledBox
                     sx={{
@@ -630,7 +691,7 @@ const InputField: React.FC = () => {
                             value={selectedCollection}
                             onChange={(e) => setSelectedCollection(e.target.value as string)}
                             fullWidth
-                            inputProps={{ shrink: true }}
+                            inputProps={{ shrink: "true" }}
                             style={{ marginTop: '8px' }}
                         >
                             {collections.length > 0 ?
