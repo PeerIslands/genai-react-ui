@@ -17,7 +17,20 @@ const NavigationDrawer: React.FC = () => {
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [historyItems, setHistoryItems] = useState([]);
     const [selectedItem, setSelectedItem] = useState(null);
-    const { setInput, setPrompt, setResponse, setContext, setExamples, setTemperature, setValidSyntax, setValidSemantics } = useContext(InputContext);
+    const {
+        collections,
+        setInput,
+        setPrompt,
+        setResponse,
+        setContext,
+        setExamples,
+        setTemperature,
+        setValidSyntax,
+        setValidSemantics,
+        setCollections,
+        setSelectedCollection,
+        setIsAccessCollection
+    } = useContext(InputContext);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
     const toggleDrawer = (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
@@ -55,6 +68,18 @@ const NavigationDrawer: React.FC = () => {
         setTemperature(item.temperature);
         setValidSyntax(item.validSyntax);
         setValidSemantics(item.validSemantics);
+
+        const words = item.question.split(/\s+/).filter((word: string) => word.length > 0);
+        let foundCollection = "Your collections";
+        for (let i = 0; i < words.length; i++) {
+            const wordMatch = collections.find(collection => collection.toLowerCase().endsWith(words[i].toLowerCase()));
+            if (wordMatch) {
+                foundCollection = wordMatch;
+                break;
+            }
+        }
+        setIsAccessCollection(foundCollection === "Your collections" ? false : true);
+        setSelectedCollection(foundCollection);
     };
 
     const list = () => (

@@ -17,6 +17,12 @@ interface IInputContext {
     setValidSyntax: (validSyntax: boolean) => void;
     validSemantics: boolean;
     setValidSemantics: (validSemantics: boolean) => void;
+    collections: string[];
+    setCollections: (collections: string[]) => void;
+    selectedCollection: string;
+    setSelectedCollection: (selectedCollection: string) => void;
+    isAccessCollection: boolean;
+    setIsAccessCollection: (isAccessCollection: boolean) => void;
 }
 
 export const InputContext = React.createContext<IInputContext>({
@@ -35,5 +41,11 @@ export const InputContext = React.createContext<IInputContext>({
     validSyntax: false,
     setValidSyntax: () => { },
     validSemantics: false,
-    setValidSemantics: () => { }
+    setValidSemantics: () => { },
+    collections: [],
+    setCollections: () => { },
+    selectedCollection: '',
+    setSelectedCollection: () => { },
+    isAccessCollection: false,
+    setIsAccessCollection: () => { }
 });

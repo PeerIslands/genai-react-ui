@@ -81,9 +81,14 @@ const InputField: React.FC = () => {
     const [isFullScreenEditor, setIsFullScreenEditor] = useState(false);
     const [isAutoDetect, setIsAutoDetect] = useState(true);
 
-    const [collections, setCollections] = useState([]);
-    const [selectedCollection, setSelectedCollection] = useState('');
-    const [isAccessCollection, setIsAccessCollection] = useState(false);
+    // const [collections, setCollections] = useState([]);
+    // const [selectedCollection, setSelectedCollection] = useState('');
+    // const [isAccessCollection, setIsAccessCollection] = useState(false);
+
+    const { collections, setCollections } = useContext(InputContext);
+    const { selectedCollection, setSelectedCollection } = useContext(InputContext);
+    const { isAccessCollection, setIsAccessCollection } = useContext(InputContext);
+
     const [openAccessModal, setOpenAccessModal] = useState(false);
 
 

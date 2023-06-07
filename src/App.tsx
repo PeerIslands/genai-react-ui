@@ -34,6 +34,9 @@ function App() {
   const [history, setHistory] = useState<string[]>([]);
   const [validSyntax, setValidSyntax] = useState(false);
   const [validSemantics, setValidSemantics] = useState(false);
+  const [collections, setCollections] = useState<string[]>([]);
+  const [selectedCollection, setSelectedCollection] = useState('');
+  const [isAccessCollection, setIsAccessCollection] = useState(false);
 
   const addQuery = (query: string) => {
     setHistory(prevHistory => [...prevHistory, query]);
@@ -65,7 +68,13 @@ function App() {
               validSyntax,
               setValidSyntax,
               validSemantics,
-              setValidSemantics
+              setValidSemantics,
+              collections,
+              setCollections,
+              selectedCollection,
+              setSelectedCollection,
+              isAccessCollection,
+              setIsAccessCollection
             }}>
               <InputField />
               <NavigationDrawer />
