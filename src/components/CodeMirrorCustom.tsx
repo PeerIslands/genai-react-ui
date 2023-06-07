@@ -8,7 +8,7 @@ interface CodeMirrorCustomProps {
     response: string;
 }
 const CodeMirrorCustom: React.FC<CodeMirrorCustomProps> = React.memo(({ response }) => {
-    console.log("CodeMirrorCustom render, response:", response);
+    // console.log("CodeMirrorCustom render, response:", response);
 
     return (
         <CodeMirror

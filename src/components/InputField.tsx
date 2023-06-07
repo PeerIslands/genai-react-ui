@@ -164,6 +164,8 @@ const InputField: React.FC = () => {
         else {
             setIsAutoDetect(true);
         }
+        setContext('');
+        setExamples('');
         setInputMode(mode);
     };
 
