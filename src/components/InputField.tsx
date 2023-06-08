@@ -23,6 +23,7 @@ import Cancel from '@mui/icons-material/Cancel';
 import { dracula, draculaInit } from '@uiw/codemirror-theme-dracula';
 import CodeMirrorCustom from "./CodeMirrorCustom";
 import Refresh from "@mui/icons-material/Refresh";
+import CodeBlock from "./CodeBlock";
 
 const StyledBox = styled(Box)(({ theme }) => ({
     padding: theme.spacing(2),
@@ -757,50 +758,30 @@ const InputField: React.FC = () => {
                 </StyledBox>
             </Box>
             <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-                <Box sx={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px', zIndex: 1 }}>
-                    <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                        <Box display="flex" alignItems="center" marginRight="30px">
-                            {validSyntax ? <CheckCircle style={{ color: "green" }} /> : <Cancel style={{ color: "red" }} />}
-                            <Typography variant="body1" style={{ marginLeft: "10px" }}>
-                                Syntax Validated
-                            </Typography>
-                        </Box>
-                        <Box display="flex" alignItems="center" marginRight="30px">
-                            {validSemantics ? <CheckCircle style={{ color: "green" }} /> : <Cancel style={{ color: "red" }} />}
-                            <Typography variant="body1" style={{ marginLeft: "10px" }}>
-                                Semantics Validated
-                            </Typography>
-                        </Box>
-                    </Box>
-                    <IconButton onClick={handleCopyClick} sx={{ color: '#00684A' }}>
-                        <FileCopy />
-                    </IconButton>
-                </Box>
-                <Box sx={{ flex: '1 1 auto', overflowY: 'auto', position: 'relative' }}>
-                    <ResultBox>
-                        {response ? (
-                            <div>
-                                <Typography variant="body2" style={{ textAlign: 'center', color: 'grey', paddingTop: '20px', paddingBottom: '20px' }}>
-                                    <strong>RESULTS</strong>
+                <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+                    <Box sx={{ flex: '1 1 auto', overflowY: 'auto', position: 'relative' }}>
+                        <ResultBox>
+                            {response ? (
+                                <CodeBlock
+                                    code={response}
+                                    validSyntax={validSyntax}
+                                    validSemantics={validSemantics}
+                                    handleCopyClick={handleCopyClick}
+                                    setResponse={setResponse}
+                                />
+                            ) : (
+                                <Typography variant="body1" style={{ textAlign: 'center', color: 'grey', paddingTop: '20px' }}>
+                                    Response will be displayed here
                                 </Typography>
-                                <div style={{ maxHeight: 'calc(100% - 40px)', overflowY: 'auto' }}>
-                                    <div style={{ maxHeight: 'calc(100% - 40px)', overflowY: 'auto' }}>
-                                        <CodeMirrorCustom response={response} />
-                                    </div>
-                                </div>
-                            </div>
-                        ) : (
-                            <Typography variant="body1" style={{ textAlign: 'center', color: 'grey', paddingTop: '20px' }}>
-                                Response will be displayed here
-                            </Typography>
-                        )}
-                        <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleCloseSnackbar}>
-                            <Alert onClose={handleCloseSnackbar} severity="success" sx={{ width: '100%' }}>
-                                Response copied to clipboard!
-                            </Alert>
-                        </Snackbar>
-                        {loading && <StyledCircularProgress />}
-                    </ResultBox>
+                            )}
+                            <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleCloseSnackbar}>
+                                <Alert onClose={handleCloseSnackbar} severity="success" sx={{ width: '100%' }}>
+                                    Response copied to clipboard!
+                                </Alert>
+                            </Snackbar>
+                            {loading && <StyledCircularProgress />}
+                        </ResultBox>
+                    </Box>
                 </Box>
                 <Box
                     sx={{
