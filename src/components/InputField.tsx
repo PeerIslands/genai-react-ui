@@ -757,37 +757,36 @@ const InputField: React.FC = () => {
                 </StyledBox>
             </Box>
             <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-                <Box sx={{ flex: '1 1 auto', overflowY: 'auto' }}>
+                <Box sx={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px', zIndex: 1 }}>
+                    <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                        <Box display="flex" alignItems="center" marginRight="30px">
+                            {validSyntax ? <CheckCircle style={{ color: "green" }} /> : <Cancel style={{ color: "red" }} />}
+                            <Typography variant="body1" style={{ marginLeft: "10px" }}>
+                                Syntax Validated
+                            </Typography>
+                        </Box>
+                        <Box display="flex" alignItems="center" marginRight="30px">
+                            {validSemantics ? <CheckCircle style={{ color: "green" }} /> : <Cancel style={{ color: "red" }} />}
+                            <Typography variant="body1" style={{ marginLeft: "10px" }}>
+                                Semantics Validated
+                            </Typography>
+                        </Box>
+                    </Box>
+                    <IconButton onClick={handleCopyClick} sx={{ color: '#00684A' }}>
+                        <FileCopy />
+                    </IconButton>
+                </Box>
+                <Box sx={{ flex: '1 1 auto', overflowY: 'auto', position: 'relative' }}>
                     <ResultBox>
-                        <IconButton onClick={handleCopyClick} sx={{ position: 'absolute', top: '5px', right: '5px', color: '#00684A', zindex: 1 }}>
-                            <FileCopy />
-                        </IconButton>
                         {response ? (
                             <div>
                                 <Typography variant="body2" style={{ textAlign: 'center', color: 'grey', paddingTop: '20px', paddingBottom: '20px' }}>
                                     <strong>RESULTS</strong>
                                 </Typography>
-                                {response && (
-                                    <Box display="flex" alignItems="center" padding="10px">
-                                        <Box display="flex" alignItems="center" marginRight="30px">
-                                            {validSyntax ? <CheckCircle style={{ color: "green" }} /> : <Cancel style={{ color: "red" }} />}
-                                            <Typography variant="body1" style={{ marginLeft: "10px" }}>
-                                                Syntax Validated
-                                            </Typography>
-                                        </Box>
-                                        <Box display="flex" alignItems="center">
-                                            {validSemantics ? <CheckCircle style={{ color: "green" }} /> : <Cancel style={{ color: "red" }} />}
-                                            <Typography variant="body1" style={{ marginLeft: "10px" }}>
-                                                Semantics Validated
-                                            </Typography>
-                                        </Box>
-                                    </Box>
-                                )}
                                 <div style={{ maxHeight: 'calc(100% - 40px)', overflowY: 'auto' }}>
                                     <div style={{ maxHeight: 'calc(100% - 40px)', overflowY: 'auto' }}>
                                         <CodeMirrorCustom response={response} />
                                     </div>
-
                                 </div>
                             </div>
                         ) : (
