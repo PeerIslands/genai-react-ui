@@ -103,7 +103,7 @@ const CodeBlock: React.FC<CodeBlockProps> = ({ code, validSyntax, validSemantics
                     boxShadow: 24,
                     p: 4
                 }}>
-                    <Typography id="modal-modal-title" variant="h6" component="h2">
+                    <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ position: 'absolute', top: '20px', left: '20px', color: 'gray' }}>
                         Edit Code
                     </Typography>
                     <CodeMirror

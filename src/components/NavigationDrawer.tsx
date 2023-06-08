@@ -118,7 +118,7 @@ const NavigationDrawer: React.FC = () => {
     return (
         <>
             <Button
-                onClick={toggleDrawer(true)} style={{ position: 'fixed', left: '20px', top: '20px' }}>
+                onClick={toggleDrawer(true)} style={{ position: 'fixed', right: '150px', top: '19px' }}>
                 <BookIcon sx={{ color: "#00684A", border: "1.5px solid white" }} />
                 <Typography variant="body2" style={{ paddingLeft: '10px', paddingRight: '10px', paddingTop: '2px', color: 'black' }}>History</Typography>
             </Button>
