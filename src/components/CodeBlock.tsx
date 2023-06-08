@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
-import { Paper, Box, Typography, IconButton, Modal, Button } from '@mui/material';
+import { Paper, Box, Typography, IconButton, Modal, Button, CircularProgress } from '@mui/material';
 import { styled } from '@mui/system';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import { CheckCircle, Cancel, FileCopy, Edit } from '@mui/icons-material';
+import { CheckCircle, Cancel, FileCopy, Edit, PlayArrow } from '@mui/icons-material';
 import CodeMirror from '@uiw/react-codemirror';
 import { dracula, draculaInit } from '@uiw/codemirror-theme-dracula';
 import { javascript } from '@codemirror/lang-javascript';
 import { json } from '@codemirror/lang-json';
+import axios from 'axios';
+import CodeBlockPrompt from './CodeBlockPrompt';
 
 interface CodeBlockProps {
     code: string;
@@ -15,6 +17,7 @@ interface CodeBlockProps {
     validSemantics: boolean;
     handleCopyClick: () => void;
     setResponse: (newResponse: string) => void;
+    selectedCollection: string;
 }
 
 const CodeBlockContainer = styled(Paper)(({ theme }) => ({
@@ -48,14 +51,41 @@ const StyledSyntaxHighlighter = styled(SyntaxHighlighter)({
     overflow: 'auto',
 });
 
-const CodeBlock: React.FC<CodeBlockProps> = ({ code, validSyntax, validSemantics, handleCopyClick, setResponse }) => {
+const CodeBlock: React.FC<CodeBlockProps> = ({ code, validSyntax, validSemantics, handleCopyClick, setResponse, selectedCollection }) => {
     const [open, setOpen] = useState(false);
     const [editorCode, setEditorCode] = useState(code);
+    const [resultOpen, setResultOpen] = useState(false);
+    const [resultData, setResultData] = useState<any>(null);
+    const [loading, setLoading] = useState(false);
 
     const handleOpen = () => setOpen(true);
     const handleClose = () => {
         setResponse(editorCode);
         setOpen(false);
+    }
+
+    const handlePlayClick = async () => {
+        setLoading(true);
+        const database = selectedCollection.split('.')[0];
+        const payload = {
+            command: code,
+            db: database,
+        };
+
+        try {
+            const response = await axios.post('http://0.0.0.0:8080/api/v1/run_mql', payload);
+            setResultData(response.data);
+            setResultOpen(true);
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleCloseResult = () => {
+        setResultOpen(false);
+        setResultData(null);
     }
 
     return (
@@ -76,6 +106,9 @@ const CodeBlock: React.FC<CodeBlockProps> = ({ code, validSyntax, validSemantics
                     </SyntaxValidation>
                 </Box>
                 <Box sx={{ display: 'flex', flexDirection: 'row-reverse' }}>
+                    <IconButton onClick={handlePlayClick} sx={{ color: 'inherit', marginLeft: '10px' }}>
+                        {loading ? <CircularProgress size={24} /> : <PlayArrow />}
+                    </IconButton>
                     <IconButton onClick={handleOpen} sx={{ color: 'inherit', marginLeft: '10px' }}>
                         <Edit />
                     </IconButton>
@@ -122,6 +155,35 @@ const CodeBlock: React.FC<CodeBlockProps> = ({ code, validSyntax, validSemantics
                     <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
                         <Button variant="contained" onClick={handleClose} sx={{ width: '100px' }}>Done</Button>
                     </Box>
+                </Box>
+            </Modal>
+            <Modal
+                open={resultOpen}
+                onClose={handleCloseResult}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <Box sx={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    width: 800,
+                    bgcolor: 'background.paper',
+                    boxShadow: 24,
+                    p: 4,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between'
+                }}>
+                    <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ color: 'gray' }}>
+                        Execution Result
+                    </Typography>
+                    <Typography id="modal-modal-description" sx={{ whiteSpace: 'pre-wrap' }}>
+                        <CodeBlockPrompt
+                            code={resultData}
+                        />
+                    </Typography>
                 </Box>
             </Modal>
         </CodeBlockContainer>

@@ -88,10 +88,6 @@ const InputField: React.FC = () => {
     const [isFullScreenEditor, setIsFullScreenEditor] = useState(false);
     const [isAutoDetect, setIsAutoDetect] = useState(true);
 
-    // const [collections, setCollections] = useState([]);
-    // const [selectedCollection, setSelectedCollection] = useState('');
-    // const [isAccessCollection, setIsAccessCollection] = useState(false);
-
     const { collections, setCollections } = useContext(InputContext);
     const { selectedCollection, setSelectedCollection } = useContext(InputContext);
     const { isAccessCollection, setIsAccessCollection } = useContext(InputContext);
@@ -775,7 +771,7 @@ const InputField: React.FC = () => {
                                 Schema
                             </Typography>
                             <CodeBlockPrompt
-                                code={schema}
+                                code={schema.replace("Schema model: ", "")}
                             />
 
                             <Typography variant="h6" component="h2" sx={{ marginTop: '20px', color: 'black' }}>
@@ -805,6 +801,7 @@ const InputField: React.FC = () => {
                                     validSemantics={validSemantics}
                                     handleCopyClick={handleCopyClick}
                                     setResponse={setResponse}
+                                    selectedCollection={selectedCollection}
                                 />
                             ) : (
                                 <Typography variant="body1" style={{ textAlign: 'center', color: 'grey', paddingTop: '20px' }}>

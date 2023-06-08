@@ -1,13 +1,8 @@
-import React, { useState } from 'react';
-import { Paper, Box, Typography, IconButton, Modal, Button } from '@mui/material';
+import React from 'react';
+import { Paper } from '@mui/material';
 import { styled } from '@mui/system';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import { CheckCircle, Cancel, FileCopy, Edit } from '@mui/icons-material';
-import CodeMirror from '@uiw/react-codemirror';
-import { dracula, draculaInit } from '@uiw/codemirror-theme-dracula';
-import { javascript } from '@codemirror/lang-javascript';
-import { json } from '@codemirror/lang-json';
 
 interface CodeBlockProps {
     code: string;
