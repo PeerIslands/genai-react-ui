@@ -327,7 +327,7 @@ const InputField: React.FC = () => {
                 onChange={handleModeChange}
                 sx={{ marginBottom: '20px' }}
             >
-                <ToggleButton value="freeform">
+                <ToggleButton value="freeform" >
                     Free form
                 </ToggleButton>
                 <ToggleButton value="structured">
@@ -764,8 +764,8 @@ const InputField: React.FC = () => {
                         </IconButton>
                         {response ? (
                             <div>
-                                <Typography variant="body1" style={{ textAlign: 'center', color: 'grey', paddingTop: '20px', paddingBottom: '20px' }}>
-                                    Results
+                                <Typography variant="body2" style={{ textAlign: 'center', color: 'grey', paddingTop: '20px', paddingBottom: '20px' }}>
+                                    <strong>RESULTS</strong>
                                 </Typography>
                                 {response && (
                                     <Box display="flex" alignItems="center" padding="10px">

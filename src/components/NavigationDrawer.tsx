@@ -124,7 +124,7 @@ const NavigationDrawer: React.FC = () => {
             </Button>
             <Button
                 onClick={handleButtonClick}
-                style={{ position: 'fixed', right: '25px', top: '15px', textTransform: 'none' }}
+                style={{ position: 'fixed', right: '20px', top: '20px', textTransform: 'none' }}
                 variant="outlined"
                 sx={{
                     borderRadius: '25px',
