@@ -4,7 +4,7 @@ import axios from 'axios';
 import { styled } from '@mui/system';
 import PeerislandsLogo from '../images/peerislands.png';
 import GoogleLogo from '../images/google.png';
-import MongoDBLogo from '../images/mongodb.png';
+import MongoDBLogo from '../images/mongodb.svg';
 import { QueryContext } from './QueryContext';
 import { InputContext } from './InputContext';
 import { Modal } from "@mui/material";
@@ -24,6 +24,7 @@ import { dracula, draculaInit } from '@uiw/codemirror-theme-dracula';
 import CodeMirrorCustom from "./CodeMirrorCustom";
 import Refresh from "@mui/icons-material/Refresh";
 import CodeBlock from "./CodeBlock";
+import CodeBlockPrompt from "./CodeBlockPrompt";
 
 const StyledBox = styled(Box)(({ theme }) => ({
     padding: theme.spacing(2),
@@ -70,6 +71,11 @@ const InputField: React.FC = () => {
     const [loading, setLoading] = useState(false);
     const [inputMode, setInputMode] = useState('freeform');
     const { addQuery } = useContext(QueryContext);
+
+    const promptSections = prompt.split('-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --');
+    const question = promptSections[1] ? promptSections[1].trim() : '';
+    const schema = promptSections[2] ? promptSections[2].trim() : '';
+    const example = promptSections[3] ? promptSections[3].trim() : '';
 
     const [open, setOpen] = useState(false);
     const [copySuccess, setCopySuccess] = useState(false);
@@ -119,6 +125,22 @@ const InputField: React.FC = () => {
         }
     };
 
+    const CodeBlockHeader = styled(Box)(({ theme }) => ({
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        backgroundColor: '#2f3542',
+        color: '#d8dee9',
+        borderRadius: '10px 10px 0 0',
+        padding: theme.spacing(1),
+        marginTop: theme.spacing(2),
+    }));
+
+    const SyntaxValidation = styled(Box)(({ theme }) => ({
+        display: 'flex',
+        alignItems: 'center',
+        marginRight: theme.spacing(2),
+    }));
 
     const populateCollection = async () => {
         try {
@@ -731,22 +753,38 @@ const InputField: React.FC = () => {
                                 overflowY: 'scroll',
                             }}
                         >
-                            <Typography variant="h6" component="h2" sx={{ position: 'absolute', top: '20px', left: '20px', color: 'gray' }}>
-                                Prompt
-                            </Typography>
-                            <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                                <IconButton onClick={handlePromptCopyClick} sx={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '20px', color: 'black' }}>
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                <Typography variant="h5" component="h2" sx={{ color: 'black' }}>
+                                    Prompt
+                                </Typography>
+                                <IconButton onClick={handlePromptCopyClick}>
                                     <FileCopy />
                                 </IconButton>
                             </Box>
-                            <CodeMirror
-                                value={prompt}
-                                height="100%"
-                                readOnly={true}
-                                extensions={[javascript(), json()]}
-                                style={{ paddingTop: '40px' }}
-                                theme={dracula}
+
+                            <Divider sx={{ my: 2 }} />
+
+                            <Typography variant="h6" component="h2" sx={{ marginTop: '20px', color: 'black' }}>
+                                Question
+                            </Typography>
+                            <CodeBlockPrompt
+                                code={question}
                             />
+
+                            <Typography variant="h6" component="h2" sx={{ marginTop: '20px', color: 'black' }}>
+                                Schema
+                            </Typography>
+                            <CodeBlockPrompt
+                                code={schema}
+                            />
+
+                            <Typography variant="h6" component="h2" sx={{ marginTop: '20px', color: 'black' }}>
+                                Example
+                            </Typography>
+                            <CodeBlockPrompt
+                                code={example}
+                            />
+
                             <Snackbar open={openPromptSnackbar} autoHideDuration={6000} onClose={handleClosePromptSnackbar}>
                                 <Alert onClose={handleClosePromptSnackbar} severity="success" sx={{ width: '100%' }}>
                                     Prompt copied to clipboard!
@@ -754,7 +792,6 @@ const InputField: React.FC = () => {
                             </Snackbar>
                         </Box>
                     </Modal>
-
                 </StyledBox>
             </Box>
             <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
@@ -798,9 +835,9 @@ const InputField: React.FC = () => {
                     <Typography variant="body2" style={{ paddingRight: '10px' }}>Built by</Typography>
                     <img src={PeerislandsLogo} alt="peerislands_logo" style={{ width: '5%', paddingBottom: '5px' }} />
                     <Typography variant="body2" style={{ paddingLeft: '10px', paddingRight: '10px' }}>Powered by</Typography>
-                    <img src={GoogleLogo} alt="google_logo" style={{ width: '5%', paddingRight: '10px' }} />
+                    <img src={GoogleLogo} alt="google_logo" style={{ width: '5%', paddingRight: '10px', paddingTop: '3px' }} />
                     <span>and</span>
-                    <img src={MongoDBLogo} alt="mongodb_logo" style={{ width: '8%', paddingLeft: '10px', paddingBottom: '5px' }} />
+                    <img src={MongoDBLogo} alt="mongodb_logo" style={{ width: '8%', paddingLeft: '10px', paddingBottom: '0px' }} />
                 </Box>
 
 
