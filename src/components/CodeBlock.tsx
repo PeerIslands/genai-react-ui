@@ -101,7 +101,10 @@ const CodeBlock: React.FC<CodeBlockProps> = ({ code, validSyntax, validSemantics
                     width: 800,
                     bgcolor: 'background.paper',
                     boxShadow: 24,
-                    p: 4
+                    p: 4,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between'
                 }}>
                     <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ position: 'absolute', top: '20px', left: '20px', color: 'gray' }}>
                         Edit Code
@@ -115,7 +118,9 @@ const CodeBlock: React.FC<CodeBlockProps> = ({ code, validSyntax, validSemantics
                         style={{ paddingTop: '40px' }}
                         theme={dracula}
                     />
-                    <Button variant="contained" onClick={handleClose} sx={{ marginTop: '20px' }} >Done</Button>
+                    <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+                        <Button variant="contained" onClick={handleClose} sx={{ width: '100px' }}>Done</Button>
+                    </Box>
                 </Box>
             </Modal>
         </CodeBlockContainer>
