@@ -179,11 +179,9 @@ const CodeBlock: React.FC<CodeBlockProps> = ({ code, validSyntax, validSemantics
                     <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ color: 'gray' }}>
                         Execution Result
                     </Typography>
-                    <Typography id="modal-modal-description" sx={{ whiteSpace: 'pre-wrap' }}>
-                        <CodeBlockPrompt
-                            code={resultData}
-                        />
-                    </Typography>
+                    <CodeBlockPrompt
+                        code={resultData}
+                    />
                 </Box>
             </Modal>
         </CodeBlockContainer>
