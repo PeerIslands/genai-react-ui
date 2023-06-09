@@ -84,7 +84,7 @@ const InputField: React.FC = () => {
     const promptSections = prompt.split('############################################################');
     const instructions = trimStartEachLine(promptSections[0] ? promptSections[0].split('***** General Instructions Start ***** ')[1] : '').replace("***** General Instructions End *****", "");
     const question = trimStartEachLine(promptSections[1] ? promptSections[1].trim() : '');
-    const schema = trimStartEachLine((promptSections[2] ? promptSections[2].trim() : '').replace("Schema model: ", ""));
+    const schema = beautify(trimStartEachLine((promptSections[2] ? promptSections[2].trim() : '').replace("Schema model:", "")));
     const example = trimStartEachLine(promptSections[3] ? promptSections[3].trim() : '');
 
     const [open, setOpen] = useState(false);
