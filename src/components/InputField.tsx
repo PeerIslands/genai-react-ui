@@ -50,16 +50,15 @@ const StyledCircularProgress = styled(CircularProgress)(({ theme }) => ({
 }));
 
 function trimStartEachLine(text: string): string {
-    // Split the text into lines
-    const lines = text.split('\n');
+    if (text) {
+        const lines = text.split('\n');
+        const trimmedLines = lines.map(line => line.trimStart());
+        const finalText = trimmedLines.join('\n');
 
-    // Trim the start of each line
-    const trimmedLines = lines.map(line => line.trimStart());
-
-    // Join the lines back together
-    const finalText = trimmedLines.join('\n');
-
-    return finalText;
+        return finalText;
+    } else {
+        return '';
+    }
 }
 
 
