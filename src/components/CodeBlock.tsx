@@ -169,21 +169,28 @@ const CodeBlock: React.FC<CodeBlockProps> = ({ code, validSyntax, validSemantics
                     left: '50%',
                     transform: 'translate(-50%, -50%)',
                     width: 800,
+                    height: 600,
                     bgcolor: 'background.paper',
                     boxShadow: 24,
                     p: 4,
                     display: 'flex',
                     flexDirection: 'column',
-                    justifyContent: 'space-between'
+                    justifyContent: 'space-between',
                 }}>
                     <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ color: 'gray' }}>
                         Execution Result
                     </Typography>
-                    <CodeBlockPrompt
-                        code={resultData}
-                    />
+                    <Box sx={{
+                        maxHeight: 'calc(100% - 56px)',  // 56px for the space taken by the title
+                        overflowY: 'auto'
+                    }}>
+                        <CodeBlockPrompt
+                            code={resultData}
+                        />
+                    </Box>
                 </Box>
             </Modal>
+
         </CodeBlockContainer>
     );
 };
