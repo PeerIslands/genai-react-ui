@@ -182,7 +182,7 @@ const CodeBlock: React.FC<CodeBlockProps> = ({ code, validSyntax, validSemantics
                         maxHeight: 'calc(100% - 56px)',  // 56px for the space taken by the title
                         overflowY: 'auto'
                     }}>
-                        {resultData && <CodeBlockPrompt code={resultData} />}
+                        {(resultData !== null && resultData !== undefined) && <CodeBlockPrompt code={typeof resultData === 'string' ? resultData : typeof resultData === 'object' ? JSON.stringify(resultData, null, 2) : resultData.toString()} />}
                     </Box>
                 </Box>
 

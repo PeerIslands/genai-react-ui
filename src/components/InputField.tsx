@@ -81,8 +81,8 @@ const InputField: React.FC = () => {
     const [inputMode, setInputMode] = useState('freeform');
     const { addQuery } = useContext(QueryContext);
 
-    const promptSections = prompt.split('-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --');
-    const instructions = trimStartEachLine(promptSections[0] ? promptSections[0].split('**Instructions: ')[1] : '');
+    const promptSections = prompt.split('------------------------------------------------------------');
+    const instructions = trimStartEachLine(promptSections[0] ? promptSections[0].split('***** General Instructions Start *****')[1] : '');
     const question = trimStartEachLine(promptSections[1] ? promptSections[1].trim() : '');
     const schema = trimStartEachLine((promptSections[2] ? promptSections[2].trim() : '').replace("Schema model: ", ""));
     const example = trimStartEachLine(promptSections[3] ? promptSections[3].trim() : '');
@@ -386,19 +386,6 @@ const InputField: React.FC = () => {
                             onClick={isFullScreenEditor ? () => setIsQuestionModalOpen(true) : undefined}
                             onChange={(e) => {
                                 setInput(e.target.value);
-                                // if (isAutoDetect) {
-                                //     const words = e.target.value.split(/\s+/).filter(word => word.length > 0);
-                                //     let foundCollection = "Your collections";
-                                //     for (let i = 0; i < words.length; i++) {
-                                //         const wordMatch = collections.find(collection => (collection as string).toLowerCase().endsWith(words[i].toLowerCase()));
-                                //         if (wordMatch) {
-                                //             foundCollection = wordMatch as string;
-                                //             break;
-                                //         }
-                                //     }
-                                //     setIsAccessCollection(foundCollection == "Your collections" ? false : true);
-                                //     setSelectedCollection(foundCollection);
-                                // }
                             }}
                             onBlur={(e) => {
                                 if (isAutoDetect) {
