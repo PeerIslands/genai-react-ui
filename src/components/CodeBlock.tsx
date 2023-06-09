@@ -74,6 +74,7 @@ const CodeBlock: React.FC<CodeBlockProps> = ({ code, validSyntax, validSemantics
 
         try {
             const response = await axios.post('http://0.0.0.0:8080/api/v1/run_mql', payload);
+            console.log(response);
             setResultData(response.data);
             setResultOpen(true);
         } catch (error) {
@@ -173,9 +174,6 @@ const CodeBlock: React.FC<CodeBlockProps> = ({ code, validSyntax, validSemantics
                     bgcolor: 'background.paper',
                     boxShadow: 24,
                     p: 4,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'space-between',
                 }}>
                     <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ color: 'gray' }}>
                         Execution Result
@@ -184,11 +182,10 @@ const CodeBlock: React.FC<CodeBlockProps> = ({ code, validSyntax, validSemantics
                         maxHeight: 'calc(100% - 56px)',  // 56px for the space taken by the title
                         overflowY: 'auto'
                     }}>
-                        <CodeBlockPrompt
-                            code={resultData}
-                        />
+                        {resultData && <CodeBlockPrompt code={resultData} />}
                     </Box>
                 </Box>
+
             </Modal>
 
         </CodeBlockContainer>
