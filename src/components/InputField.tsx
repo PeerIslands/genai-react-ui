@@ -15,14 +15,10 @@ import { js as beautify } from 'js-beautify';
 import { Snackbar, Alert, IconButton } from '@mui/material';
 import FileCopy from '@mui/icons-material/FileCopy';
 import Close from '@mui/icons-material/Close';
-import CheckCircle from '@mui/icons-material/CheckCircle';
-import Cancel from '@mui/icons-material/Cancel';
 
 
 //THEMES
 import { dracula, draculaInit } from '@uiw/codemirror-theme-dracula';
-import CodeMirrorCustom from "./CodeMirrorCustom";
-import Refresh from "@mui/icons-material/Refresh";
 import CodeBlock from "./CodeBlock";
 import CodeBlockPrompt from "./CodeBlockPrompt";
 
@@ -53,6 +49,20 @@ const StyledCircularProgress = styled(CircularProgress)(({ theme }) => ({
     transform: 'translate(-50%, -50%)'
 }));
 
+function trimStartEachLine(text: string): string {
+    // Split the text into lines
+    const lines = text.split('\n');
+
+    // Trim the start of each line
+    const trimmedLines = lines.map(line => line.trimStart());
+
+    // Join the lines back together
+    const finalText = trimmedLines.join('\n');
+
+    return finalText;
+}
+
+
 
 const InputField: React.FC = () => {
 
@@ -73,9 +83,10 @@ const InputField: React.FC = () => {
     const { addQuery } = useContext(QueryContext);
 
     const promptSections = prompt.split('-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --');
-    const question = promptSections[1] ? promptSections[1].trim() : '';
-    const schema = promptSections[2] ? promptSections[2].trim() : '';
-    const example = promptSections[3] ? promptSections[3].trim() : '';
+    const instructions = trimStartEachLine(promptSections[0] ? promptSections[0].split('**Instructions: ')[1] : '');
+    const question = trimStartEachLine(promptSections[1] ? promptSections[1].trim() : '');
+    const schema = trimStartEachLine((promptSections[2] ? promptSections[2].trim() : '').replace("Schema model: ", ""));
+    const example = trimStartEachLine(promptSections[3] ? promptSections[3].trim() : '');
 
     const [open, setOpen] = useState(false);
     const [copySuccess, setCopySuccess] = useState(false);
@@ -761,6 +772,13 @@ const InputField: React.FC = () => {
                             <Divider sx={{ my: 2 }} />
 
                             <Typography variant="h6" component="h2" sx={{ marginTop: '20px', color: 'black' }}>
+                                Instructions
+                            </Typography>
+                            <CodeBlockPrompt
+                                code={instructions}
+                            />
+
+                            <Typography variant="h6" component="h2" sx={{ marginTop: '20px', color: 'black' }}>
                                 Question
                             </Typography>
                             <CodeBlockPrompt
@@ -771,7 +789,7 @@ const InputField: React.FC = () => {
                                 Schema
                             </Typography>
                             <CodeBlockPrompt
-                                code={schema.replace("Schema model: ", "")}
+                                code={schema}
                             />
 
                             <Typography variant="h6" component="h2" sx={{ marginTop: '20px', color: 'black' }}>
