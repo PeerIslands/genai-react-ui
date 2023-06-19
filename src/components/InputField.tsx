@@ -107,7 +107,8 @@ const InputField: React.FC = () => {
 
     const handleOpenContextModal = async () => {
         try {
-            const response = await axios.get('http://localhost:8080/api/v1/collection_list');
+            // const response = await axios.get('http://0.0.0.0:8080/api/v1/collection_list');
+            const response = await axios.get('https://genai-api-nj7gs5zoaq-uc.a.run.app/api/v1/collection_list');
             console.log(response.data);
             setCollections(response.data.map((item: any) => item.collection));
         } catch (error) {
@@ -118,7 +119,8 @@ const InputField: React.FC = () => {
 
     const loadCollections = async () => {
         try {
-            const response = await axios.get('http://localhost:8080/api/v1/collection_list');
+            // const response = await axios.get('http://0.0.0.0:8080/api/v1/collection_list');
+            const response = await axios.get('https://genai-api-nj7gs5zoaq-uc.a.run.app/api/v1/collection_list');
             if (response.data == null) {
                 console.log('response is null');
                 return;
@@ -245,7 +247,8 @@ const InputField: React.FC = () => {
         addQuery(input);
 
         try {
-            const response = await axios.post('http://0.0.0.0:8080/api/v1/predict',
+            // const response = await axios.post('http://0.0.0.0:8080/api/v1/predict',
+            const response = await axios.post('https://genai-api-nj7gs5zoaq-uc.a.run.app/api/v1/predict',
                 {
                     instances: [
                         {

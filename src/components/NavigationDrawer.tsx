@@ -38,7 +38,8 @@ const NavigationDrawer: React.FC = () => {
     };
 
     const fetchHistory = async () => {
-        const response = await axios.get('http://0.0.0.0:8080/api/v1/history?limit=20');
+        // const response = await axios.get('http://0.0.0.0:8080/api/v1/history?limit=20');
+        const response = await axios.get('https://genai-api-nj7gs5zoaq-uc.a.run.app/api/v1/history?limit=20');
         console.log(response.data);
         setHistoryItems(response.data);
     }
@@ -134,7 +135,7 @@ const NavigationDrawer: React.FC = () => {
                     }
                 }}
             >
-                <Box component="span" sx={{ pr: 1 }}>John Doe</Box>
+                <Box component="span" sx={{ pr: 1 }}>Rajesh</Box>
                 <ArrowDropDownIcon />
             </Button>
             <Menu

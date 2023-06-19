@@ -73,7 +73,8 @@ const CodeBlock: React.FC<CodeBlockProps> = ({ code, validSyntax, validSemantics
         };
 
         try {
-            const response = await axios.post('http://0.0.0.0:8080/api/v1/run_mql', payload);
+            // const response = await axios.post('http://0.0.0.0:8080/api/v1/run_mql', payload);
+            const response = await axios.post('https://genai-api-nj7gs5zoaq-uc.a.run.app/api/v1/run_mql', payload);
             console.log(response);
             setResultData(response.data);
             setResultOpen(true);
