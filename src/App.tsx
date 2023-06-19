@@ -5,7 +5,6 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import InputField from './components/InputField';
 import { InputContext } from './components/InputContext';
 import NavigationDrawer from './components/NavigationDrawer';
-import Rive from '@rive-app/react-canvas';
 import { QueryContext } from './components/QueryContext';
 
 const theme = createTheme({
@@ -18,10 +17,6 @@ const theme = createTheme({
     },
   },
 });
-
-const Shapes = () => (
-  <Rive src="Assets/shapes.riv" style={{ position: "absolute", width: "100%", height: "100%", zIndex: 0 }} />
-);
 
 function App() {
 
@@ -44,7 +39,6 @@ function App() {
 
   return (
     <div className="App">
-      {/* <Shapes /> */}
       <header className='App-header' style={{ zIndex: 2, position: 'relative' }}>
         <link
           rel="stylesheet"

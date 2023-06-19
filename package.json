@@ -1,19 +1,20 @@
 {
   "name": "genaimongoapp",
+  "productName": "MongoDB Query Builder",
   "version": "0.1.0",
   "private": true,
-  "main": "public/electron.js",
+  "main": "public/main.js",
   "dependencies": {
     "@codemirror/basic-setup": "^0.20.0",
     "@codemirror/lang-javascript": "^6.1.8",
     "@codemirror/lang-json": "^6.0.1",
+    "@electron/remote": "^2.0.10",
     "@emotion/react": "^11.11.0",
     "@emotion/styled": "^11.11.0",
     "@leafygreen-ui/palette": "^4.0.4",
     "@leafygreen-ui/theme": "^3.0.1",
     "@mui/icons-material": "^5.11.16",
     "@mui/material": "^5.13.3",
-    "@rive-app/react-canvas": "^3.0.50",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -28,7 +29,9 @@
     "@uiw/react-textarea-code-editor": "^2.1.1",
     "axios": "^1.4.0",
     "codemirror": "^6.0.1",
+    "cross-env": "^7.0.3",
     "dotenv": "^16.3.1",
+    "electron-builder": "^24.4.0",
     "install": "^0.13.0",
     "js-beautify": "^1.14.7",
     "mongodb": "^5.5.0",
@@ -46,8 +49,11 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "electron-start": "electron .",
-    "dev": "concurrently \"cross-env BROWSER=none npm run start\" \"npm run electron-start\""
+    "dev": "concurrently -k \"cross-env BROWSER=none npm run start-react\" \"sleep 5 && npm run start-electron\"",
+    "start-react": "react-scripts start",
+    "start-electron": "electron .",
+    "package-mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --prune=true --out=dist/",
+    "package-win": "electron-packager . --overwrite --platform=win32 --arch=ia32 --prune=true --out=dist/"
   },
   "eslintConfig": {
     "extends": [
@@ -68,13 +74,10 @@
     ]
   },
   "devDependencies": {
-    "@types/dotenv-webpack": "^7.0.4",
     "@types/js-beautify": "^1.13.3",
-    "concurrently": "^8.0.1",
-    "cross-env": "^7.0.3",
-    "dotenv-webpack": "^8.0.1",
+    "concurrently": "^8.2.0",
     "electron": "^24.4.0",
-    "electron-builder": "^23.6.0",
+    "electron-packager": "^17.1.1",
     "wait-on": "^7.0.1"
   }
 }
