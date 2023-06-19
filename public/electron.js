@@ -1,6 +1,7 @@
 const { app, BrowserWindow } = require('electron')
 const path = require('path')
 const url = require('url')
+require('dotenv').config();
 
 let mainWindow
 
@@ -21,7 +22,7 @@ function createWindow() {
     win.loadURL('http://localhost:3000');
 
     // Open the DevTools.
-    win.webContents.openDevTools()
+    // win.webContents.openDevTools()
 }
 app.disableHardwareAcceleration();
 app.on('ready', createWindow)
