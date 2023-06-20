@@ -1,5 +1,5 @@
 const electron = require('electron');
-const { app, BrowserWindow } = electron;
+const { app, BrowserWindow, ipcMain } = electron;
 
 let mainWindow;
 app.on('ready', () => {
@@ -17,4 +17,12 @@ app.on('ready', () => {
     mainWindow.once('ready-to-show', () => {
         mainWindow.show();
     });
+});
+
+ipcMain.on('response', (event, value) => {
+    console.log(value);
+});
+
+ipcMain.on('error', (event, value) => {
+    console.log(value);
 });

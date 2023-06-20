@@ -7,6 +7,8 @@ import { InputContext } from './components/InputContext';
 import NavigationDrawer from './components/NavigationDrawer';
 import { QueryContext } from './components/QueryContext';
 
+const ipcRenderer = window.require('electron').ipcRenderer;
+
 const theme = createTheme({
   palette: {
     primary: {

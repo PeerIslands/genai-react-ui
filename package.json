@@ -32,7 +32,7 @@
     "codemirror": "^6.0.1",
     "cross-env": "^7.0.3",
     "dotenv": "^16.3.1",
-    "electron-builder": "^24.4.0",
+    "electron-squirrel-startup": "^1.0.0",
     "install": "^0.13.0",
     "js-beautify": "^1.14.7",
     "mongodb": "^5.5.0",
@@ -46,7 +46,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "electron-forge start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
@@ -54,7 +54,9 @@
     "dev": "concurrently -k \"cross-env BROWSER=none npm run start-react\" \"sleep 5 && npm run start-electron\"",
     "start-electron": "electron .",
     "package-mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --prune=true --out=dist/",
-    "package-win": "electron-packager . --overwrite --platform=win32 --arch=ia32 --prune=true --out=dist/"
+    "package-win": "electron-packager . --overwrite --platform=win32 --arch=ia32 --prune=true --out=dist/",
+    "package": "electron-forge package",
+    "make": "electron-forge make"
   },
   "eslintConfig": {
     "extends": [
@@ -75,10 +77,49 @@
     ]
   },
   "devDependencies": {
+    "@electron-forge/cli": "^6.2.1",
+    "@electron-forge/maker-deb": "^6.2.1",
+    "@electron-forge/maker-dmg": "^6.2.1",
+    "@electron-forge/maker-rpm": "^6.2.1",
+    "@electron-forge/maker-squirrel": "^6.2.1",
+    "@electron-forge/maker-zip": "^6.2.1",
+    "@electron-forge/plugin-auto-unpack-natives": "^6.2.1",
     "@types/js-beautify": "^1.13.3",
     "concurrently": "^8.2.0",
     "electron": "^24.4.0",
-    "electron-packager": "^17.1.1",
     "wait-on": "^7.0.1"
+  },
+  "config": {
+    "forge": {
+      "packagerConfig": {},
+      "makers": [
+        {
+          "name": "@electron-forge/maker-squirrel",
+          "config": {
+            "name": "my_electron_app"
+          }
+        },
+        {
+          "name": "@electron-forge/maker-zip",
+          "platforms": [
+            "darwin"
+          ]
+        },
+        {
+          "name": "@electron-forge/maker-dmg",
+          "config": {
+            "format": "ULFO"
+          }
+        },
+        {
+          "name": "@electron-forge/maker-deb",
+          "config": {}
+        },
+        {
+          "name": "@electron-forge/maker-rpm",
+          "config": {}
+        }
+      ]
+    }
   }
 }

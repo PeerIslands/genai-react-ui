@@ -22,6 +22,9 @@ import { dracula, draculaInit } from '@uiw/codemirror-theme-dracula';
 import CodeBlock from "./CodeBlock";
 import CodeBlockPrompt from "./CodeBlockPrompt";
 
+// IPC Renderer
+const ipcRenderer = window.require('electron').ipcRenderer;
+
 const StyledBox = styled(Box)(({ theme }) => ({
     padding: theme.spacing(2),
     border: `1px solid ${theme.palette.divider}`,
@@ -35,8 +38,6 @@ const StyledCodeMirror = styled(CodeMirror)(({ theme }) => ({
         height: '100%'
     },
 }));
-
-
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
     width: '100%',
@@ -60,8 +61,6 @@ function trimStartEachLine(text: string): string {
         return '';
     }
 }
-
-
 
 const InputField: React.FC = () => {
 
@@ -109,9 +108,11 @@ const InputField: React.FC = () => {
         try {
             const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/collection_list`);
             console.log(response.data);
+            ipcRenderer.send('response', response.data);
             setCollections(response.data.map((item: any) => item.collection));
         } catch (error) {
             console.error('Failed to fetch collections', error);
+            ipcRenderer.send('error', error);
         }
         setIsContextModalOpen(true);
     };
@@ -121,6 +122,7 @@ const InputField: React.FC = () => {
             const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/collection_list`);
             if (response.data == null) {
                 console.log('response is null');
+                ipcRenderer.send('error', 'Failed to fetch collections, response is null');
                 return;
             }
             console.log(response)
@@ -128,6 +130,7 @@ const InputField: React.FC = () => {
             setCollections(collections);
         } catch (error) {
             console.error('Failed to fetch collections', error);
+            ipcRenderer.send('error', error);
         }
     };
 
@@ -152,14 +155,17 @@ const InputField: React.FC = () => {
         try {
             const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/schema?collection=${selectedCollection}`);
             console.log(response);
+            ipcRenderer.send('response', response);
             // check if response is null
             if (response.data == null) {
                 console.log('response is null');
+                ipcRenderer.send('error', 'response is null');
                 return;
             }
             setContext(context + '\n' + selectedCollection + ' schema' + '\n' + response.data.schema);
         } catch (error) {
             console.error('Failed to populate collection', error);
+            ipcRenderer.send('error', error);
         }
     };
 
@@ -211,6 +217,7 @@ const InputField: React.FC = () => {
             })
             .catch(err => {
                 console.log('Something went wrong', err);
+                ipcRenderer.send('error', err);
             });
     };
 
@@ -228,6 +235,7 @@ const InputField: React.FC = () => {
             })
             .catch(err => {
                 console.log('Something went wrong', err);
+                ipcRenderer.send('error', err);
             });
     };
 
@@ -268,7 +276,8 @@ const InputField: React.FC = () => {
                 }
             );
 
-            console.log(response);
+            console.log("response", response);
+            ipcRenderer.send("response", String(response.data));
             if (response && response.data) {
                 setResponse(response.data.code);
                 setPrompt(response.data.prompt);
@@ -277,6 +286,7 @@ const InputField: React.FC = () => {
             }
         } catch (error) {
             console.error('Error making request:', error);
+            ipcRenderer.send('error', error);
         } finally {
             setLoading(false);
         }
