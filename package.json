@@ -50,8 +50,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
+    "build-electron": "npm run build && npm run start-electron",
     "dev": "concurrently -k \"cross-env BROWSER=none npm run start-react\" \"sleep 5 && npm run start-electron\"",
-    "start-react": "react-scripts start",
     "start-electron": "electron .",
     "package-mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --prune=true --out=dist/",
     "package-win": "electron-packager . --overwrite --platform=win32 --arch=ia32 --prune=true --out=dist/"
