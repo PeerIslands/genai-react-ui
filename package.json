@@ -3,7 +3,8 @@
   "productName": "MongoDB Query Builder",
   "version": "0.1.0",
   "private": true,
-  "main": "public/main.js",
+  "main": "index.js",
+  "homepage": "./",
   "dependencies": {
     "@codemirror/basic-setup": "^0.20.0",
     "@codemirror/lang-javascript": "^6.1.8",
